@@ -35,7 +35,7 @@
   <link href="{{ asset('assets/src/lib/select2/css/select2.min.css')}}" rel="stylesheet">
   <!-- azia CSS -->
   <link rel="stylesheet" href="{{ asset('assets/src/css/azia.css') }}">
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -53,9 +53,9 @@
   @include('layouts.footer')
   <!-- End Footer area-->
 
-  <!-- <script src="{{ asset('assets/src/lib/jquery/jquery.min.js') }}"></script> -->
-  <!-- <script src="{{ asset('assets/src/lib/bootstrap/js/bootstrap.min.js') }}"></script> -->
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('assets/src/lib/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('assets/src/lib/bootstrap/js/bootstrap.min.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script src="{{ asset('assets/src/lib/ionicons/ionicons.js') }}"></script>
   <script src="{{ asset('assets/src/lib/jquery.flot/jquery.flot.js') }}"></script>
