@@ -4,11 +4,13 @@
 
 <div class="container">
     <div class="az-content-body pd-lg-l-40 d-flex flex-column">
-        <h2 class="az-content-title">Members list</h2>
-        <div class="breadcomb-report">
-            <a href="{{ route('drivers.export') }}" class="btn btn-primary btn-rounded btn-block">Download Report</a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="az-content-title mb-0">Members list</h2>
+            <div class="d-flex gap-2">
+                <a href="{{ route('drivers.export') }}" class="btn btn-primary btn-rounded btn-block">Download Report</a>
+            </div>
         </div>
-        <div>
+        <div class="card shadow-sm p-4">
             <table class="table" id="example2">
                 <thead>
                     <tr>

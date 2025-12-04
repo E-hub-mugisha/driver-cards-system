@@ -60,7 +60,7 @@ class HomeController extends Controller
     {
         $drivers = Driver::all();
         $companies = Members::all();
-        return view('admin.index', compact('drivers','companies'));
+        return view('admin.driver-lists', compact('drivers','companies'));
     }
 
     /**

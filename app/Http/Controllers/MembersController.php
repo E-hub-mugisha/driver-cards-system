@@ -99,16 +99,15 @@ class MembersController extends Controller
 
             alert()->success('success!', 'Member activated successfully.');
             return redirect()->back()
-            ->with('success', 'member successfully active');
+                ->with('success', 'member successfully active');
         } else {
             // User already exists, handle the case accordingly
             // For example, return an error message or redirect back with a message
             alert()->warning('Warning!', 'Member already activated.');
 
             return redirect()->back()
-            ->with('success', 'member successfully active');
+                ->with('success', 'member successfully active');
         }
-        
     }
     public function InActiveMember(string $id)
     {
@@ -124,7 +123,7 @@ class MembersController extends Controller
 
     public function memberReport()
     {
-        $members = Members::select('name')->distinct()->get();
+        $members = Members::select('name')->withCount('drivers')->distinct()->get();
         return view('admin.membersReport', compact('members'));
     }
 
@@ -132,13 +131,13 @@ class MembersController extends Controller
     {
         $drivers = Driver::where('company', $name)
             ->where('status', $status)->get();
-$memberOf = $name;
+        $memberOf = $name;
         $statusOf = $status;
-        return view('admin.driversByMember', compact('drivers', 'name', 'status','memberOf','statusOf'));
+        return view('admin.driversByMember', compact('drivers', 'name', 'status', 'memberOf', 'statusOf'));
     }
-public function exportDriver($name, $status)
+    public function exportDriver($name, $status)
     {
-        
+
         return Excel::download(new DriversByCompanyExport($name, $status), 'drivers.xlsx');
     }
 }

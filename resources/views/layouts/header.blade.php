@@ -10,6 +10,19 @@
         <a href="#" class="close">&times;</a>
       </div><!-- az-header-menu-header -->
       <ul class="nav">
+        @if(auth()->user()->type == 'admin')
+        <li class="nav-item">
+          <a href="{{ route('admin.home') }}" class="nav-link">Dashboard</a>
+        </li>
+        @elseif(auth()->user()->type == 'manager')
+        <li class="nav-item">
+          <a href="{{ route('manager.home') }}" class="nav-link">Dashboard</a>
+        </li>
+        @else
+        <li class="nav-item">
+          <a href="{{ route('driver.index') }}" class="nav-link">Dashboard</a>
+        </li>
+        @endif
         <li class="nav-item">
           <a href="{{ route('member.index')}}" class="nav-link"><span>Members List</span></a>
         </li>
@@ -28,7 +41,6 @@
       </ul>
     </div><!-- az-header-menu -->
     <div class="az-header-right">
-      <a href="#" class="az-header-search-link"><i class="fas fa-search"></i></a>
       <div class="az-header-message">
         <a href="app-chat.html"><i class="typcn typcn-messages"></i></a>
       </div><!-- az-header-message -->
@@ -74,24 +86,28 @@
         </div><!-- dropdown-menu -->
       </div><!-- az-header-notification -->
       <div class="dropdown az-profile-menu">
-        <a href="#" class="az-img-user"><img src="../img/faces/face1.jpg" alt=""></a>
+        <a href="#" class="az-img-user"><img src="{{ asset('assets/src/img/faces/face1.jpg') }}" alt=""></a>
         <div class="dropdown-menu">
           <div class="az-dropdown-header d-sm-none">
             <a href="#" class="az-header-arrow"><i class="icon ion-md-arrow-back"></i></a>
           </div>
           <div class="az-header-profile">
             <div class="az-img-user">
-              <img src="../img/faces/face1.jpg" alt="">
+              <img src="{{ asset('assets/src/img/faces/face1.jpg') }}" alt="">
             </div><!-- az-img-user -->
-            <h6>Aziana Pechon</h6>
-            <span>Premium Member</span>
+            <h6>{{ Auth::user()->name }}</h6>
+            <span>{{ Auth::user()->type }}</span>
           </div><!-- az-header-profile -->
-
-          <a href="#" class="dropdown-item"><i class="typcn typcn-user-outline"></i> My Profile</a>
-          <a href="#" class="dropdown-item"><i class="typcn typcn-edit"></i> Edit Profile</a>
-          <a href="#" class="dropdown-item"><i class="typcn typcn-time"></i> Activity Logs</a>
           <a href="#" class="dropdown-item"><i class="typcn typcn-cog-outline"></i> Account Settings</a>
-          <a href="page-signin.html" class="dropdown-item"><i class="typcn typcn-power-outline"></i> Sign Out</a>
+          <a href="#" class="dropdown-item"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <i class="typcn typcn-power-outline"></i> Sign Out
+          </a>
+
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+          </form>
+
         </div><!-- dropdown-menu -->
       </div>
     </div><!-- az-header-right -->

@@ -4,14 +4,27 @@
 
 <div class="container">
     <div class="az-content-body pd-lg-l-40 d-flex flex-column">
-        <h2 class="az-content-title">@yield('title')</h2>
-        <p>Welcome to A.T.P.R <span class="bread-ntd">System</span></p>
+        <div class="d-flex justify-content-between align-items-center mb-3">
 
-        <div class="breadcomb-report">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModalAddDriver">
-                Add Driver
-            </button>
+            <!-- TITLE -->
+            <h2 class="az-content-title mb-0">Drivers lists</h2>
+
+            <!-- BUTTONS -->
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary btn-rounded"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModalAddDriver">
+                    Add Driver
+                </button>
+
+                <a href="{{ route('drivers.export') }}"
+                    class="btn btn-success btn-rounded">
+                    Download Report
+                </a>
+            </div>
+
         </div>
+
 
         <!-- Bootstrap 5 Modal -->
         <div class="modal fade" id="myModalAddDriver" tabindex="-1" aria-labelledby="addDriverLabel" aria-hidden="true">
@@ -137,11 +150,7 @@
             </div>
         </div>
 
-
-        <div class="breadcomb-report">
-            <a href="{{ route('drivers.export') }}" data-toggle="tooltip" data-placement="left" title="Download Report" class="btn btn-success">Download Report</a>
-        </div>
-        <div>
+        <div class="card mt-4 shadow-sm py-3 px-4">
             <table class="table" id="example2">
 
                 <thead>

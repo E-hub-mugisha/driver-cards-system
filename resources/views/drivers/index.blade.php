@@ -22,7 +22,7 @@
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-6">
                             <div class="breadcomb-report">
-                                <button class="btn" data-toggle="modal" data-target="#myModalAddDriver">Add Driver</button>
+                                <button class="btn" data-bs-toggle="modal" data-bs-target="#myModalAddDriver">Add Driver</button>
                             </div>
                             <div class="modal fade" id="myModalAddDriver" role="dialog">
                                 <div class="modal-dialog modal-large">
