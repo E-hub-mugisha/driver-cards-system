@@ -20,4 +20,9 @@ class Driver extends Model
         'company_id',
         'photo',
     ];
+
+    public function behaviors()
+    {
+        return $this->hasMany(DriverBehavior::class);
+    }
 }

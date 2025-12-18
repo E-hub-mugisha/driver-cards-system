@@ -194,6 +194,20 @@
                                         </a>
                                     </li>
                                     <li>
+                                        <a href="{{ route('admin.drivers.behaviors.index', $driver) }}"
+                                            class="dropdown-item btn btn-sm btn-secondary">
+                                            View Behaviors
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item btn btn-sm btn-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#reportBehaviorModal-{{ $driver->id }}">
+                                            Report Behavior
+                                        </button>
+
+                                    </li>
+                                    <li>
                                         <a class="dropdown-item btn btn-info btn-xs" href="{{ route('admin.edit', $driver->id) }}">
                                             Edit
                                         </a>
@@ -218,4 +232,77 @@
     </div>
 </div>
 
+@foreach( $drivers as $driver)
+<!-- REPORT MODAL -->
+<div class="modal fade" id="reportBehaviorModal-{{ $driver->id }}">
+    <div class="modal-dialog">
+        <form method="POST"
+            action="{{ route('admin.drivers.behaviors.store', $driver) }}"
+            class="modal-content">
+            @csrf
+
+            <div class="modal-header">
+                <h5>Report Behavior – {{ $driver->name }}</h5>
+            </div>
+
+            <div class="modal-body">
+                <!-- CATEGORY -->
+                <select class="form-control mb-2"
+                    onchange="this.nextElementSibling.querySelectorAll('option').forEach(o=>o.style.display=o.dataset.cat==this.value?'block':'none')">
+                    <option value="">Select Category</option>
+                    @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+
+                <!-- BEHAVIOR -->
+                <select name="behavior_type_id"
+                    class="form-control mb-2"
+                    required
+                    onchange="
+            this.form.score.value =
+            this.options[this.selectedIndex].dataset.score || ''
+        ">
+                    <option value="">Select Behavior</option>
+
+                    @foreach($categories as $cat)
+                    @foreach($cat->behaviorTypes as $b)
+                    <option value="{{ $b->id }}"
+                        data-cat="{{ $cat->id }}"
+                        data-score="{{ $b->default_score }}"
+                        style="display:none">
+                        {{ $b->name }}
+                    </option>
+                    @endforeach
+                    @endforeach
+                </select>
+
+
+                <!-- SEVERITY -->
+                <select name="severity" class="form-control mb-2">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+
+                <!-- SCORE -->
+                <input type="number"
+                    name="score"
+                    class="form-control mb-2"
+                    placeholder="Score (auto-filled)">
+
+
+                <!-- description -->
+                <textarea name="description"
+                    class="form-control"
+                    placeholder="description (optional)"></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endforeach
 @endsection

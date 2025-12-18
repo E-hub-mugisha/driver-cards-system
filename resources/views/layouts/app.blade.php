@@ -45,7 +45,7 @@
   <!-- End Header Top Area -->
   @include('sweetalert::alert')
   <!-- Main Menu area End-->
-  <div class="az-content az-content-dashboard">
+  <div class="az-content az-content-dashboard vh-100">
     @yield('content')
   </div>
   <!-- Start Footer area-->

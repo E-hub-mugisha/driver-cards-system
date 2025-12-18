@@ -5,13 +5,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login | {{ config('app.name') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
             height: 100vh;
-            background: linear-gradient(135deg, #4f46e5, #9333ea);
+            background: #00ADEE;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,18 +25,18 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 530px;
-            color: #4f46e5;
+            color: #000000;
         }
 
         label {
-            color: #fff;
+            color: #000000;
         }
     </style>
 </head>
 
 <body>
     <div class="auth-card">
-        <h2 class="text-center text-primary fw-bold mb-4">Login</h2>
+        <h2 class="text-center fw-bold mb-4">Login</h2>
 
         @if(session('status'))
         <div class="alert alert-success">{{ session('status') }}</div>
@@ -44,7 +44,7 @@
 
         <!-- If user is logged in - show dashboard button -->
         @auth
-        <h3 class="text-primary">The user {{ Auth::user()->name }} is currently logged in click button below to proceed</h3>
+        <p class="mb-3">The user {{ Auth::user()->name }} is currently logged in click button below to proceed</p>
         <div class="text-center mb-3">
             @if(auth()->user()->type == 'admin')
             <a href="{{ route('admin.home') }}" class="btn btn-success w-100 fw-bold">Go to Admin Dashboard</a>
@@ -73,10 +73,10 @@
                 @error('password')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
 
-            <button class="btn btn-light w-100 fw-bold">Login</button>
+            <button class="btn btn-primary w-100 fw-bold">Login</button>
 
-            <p class="text-center text-white mt-3">
-                Don’t have an account? <a href="{{ route('register') }}" class="text-white fw-bold">Register</a>
+            <p class="text-center mt-3">
+                Don’t have an account? <a href="{{ route('register') }}" class="fw-bold">Register</a>
             </p>
         </form>
         @endguest

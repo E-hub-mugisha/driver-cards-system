@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminBehaviorController;
+use App\Http\Controllers\Admin\AdminDriverController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DriverController;
@@ -72,6 +74,17 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/member/driver/pending', [MembersController::class, 'DriverPending'])->name('pending.driver');
     Route::get('/member/driver/approved', [MembersController::class, 'DriverDeclined'])->name('declined.driver');
     Route::delete('/admin/member/delete/{id}', [MembersController::class, "destroy"])->name('member.delete');
+
+    Route::post('/admin/drivers/{driver}/behaviors', [AdminDriverController::class, 'storeBehavior'])->name('admin.drivers.behaviors.store');
+    Route::get('/admin/drivers/{driver}/behaviors', [AdminDriverController::class, 'indexBehavior'])->name('admin.drivers.behaviors.index');
+});
+
+Route::middleware(['auth', 'user-access:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('behaviors', [AdminBehaviorController::class, 'index'])->name('behaviors.index');
+    Route::post('behaviors', [AdminBehaviorController::class, 'store'])->name('behaviors.store');
+    Route::put('behaviors/{behavior}', [AdminBehaviorController::class, 'update'])->name('behaviors.update');
+    Route::delete('behaviors/{behavior}', [AdminBehaviorController::class, 'destroy'])->name('behaviors.destroy');
+    Route::get('/admin/behaviors/{behavior}/drivers', [AdminBehaviorController::class, 'driverBehavior'])->name('behaviors.drivers');
 });
 
 /*------------------------------------------

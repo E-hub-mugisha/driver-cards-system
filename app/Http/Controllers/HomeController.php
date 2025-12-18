@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\DriversExport;
+use App\Models\BehaviorCategory;
 use App\Models\Driver;
 use App\Models\Members;
 use App\Models\User;
@@ -60,7 +61,8 @@ class HomeController extends Controller
     {
         $drivers = Driver::all();
         $companies = Members::all();
-        return view('admin.driver-lists', compact('drivers','companies'));
+        $categories = BehaviorCategory::with('behaviorTypes')->get();
+        return view('admin.driver-lists', compact('drivers','companies','categories'));
     }
 
     /**
@@ -314,5 +316,12 @@ class HomeController extends Controller
 
         return redirect()->back()
             ->with('success', 'user deleted successfully');
+    }
+
+    public function behaviour(string $id)
+    {
+        $drivers = Driver::all();
+
+        return view('admin.behaviours.index', compact('drivers'));
     }
 }
