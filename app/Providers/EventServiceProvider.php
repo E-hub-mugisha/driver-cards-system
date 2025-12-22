@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Auth\Events\Login;
 use App\Listeners\LogLastLogin;
+use App\Models\DriverBehavior;
+use App\Observers\DriverBehaviorObserver;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -24,7 +26,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        DriverBehavior::observe(DriverBehaviorObserver::class);
     }
 
     /**

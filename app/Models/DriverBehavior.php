@@ -9,10 +9,18 @@ class DriverBehavior extends Model
     protected $fillable = [
         'driver_id',
         'behavior_type_id',
+        'type',
         'severity',
         'score',
-        'notes',
-        'reported_by',
+        'behavior_date',
+        'recorded_month',
+        'description',
+        'reported_by'
+    ];
+
+    protected $casts = [
+        'behavior_date' => 'date',
+        'recorded_month' => 'date',
     ];
 
     // ✅ Define the behaviorType relationship

@@ -50,7 +50,7 @@
                         <a href="{{ route('admin.behaviors.index') }}" class="nk-menu-link"><span>Behavior</span></a>
                     </li>
                     <li class="nk-menu-item">
-                        <a href="{{ route('member.report')}}" class="nk-menu-link"><span>Members Report</span></a>
+                        <a href="{{ route('reports.index')}}" class="nk-menu-link"><span>Reports</span></a>
                     </li>
                 </ul>
             </div>

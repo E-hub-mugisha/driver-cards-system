@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\CompanyDriversController;
 use App\Http\Controllers\Admin\CompanyStaffController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DriversController;
+use App\Http\Controllers\Admin\IncidentController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -112,6 +114,15 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::get('/{driver}', [DriversController::class, 'show'])->name('show');
         Route::post('/{driver}/approve', [DriversController::class, 'approve'])
             ->name('approve');
+
+        Route::post('{driver}/incidents', [IncidentController::class, 'store'])
+            ->name('incidents.store');
+
+        Route::post('incidents/{incident}/approve', [IncidentController::class, 'approve'])
+            ->name('incidents.approve');
+
+        Route::post('incidents/{incident}/reject', [IncidentController::class, 'reject'])
+            ->name('incidents.reject');
     });
 
     Route::prefix('admin/companies/{company}')->group(function () {
@@ -129,6 +140,15 @@ Route::middleware(['auth', 'user-access:admin'])->prefix('admin')->name('admin.'
     Route::put('behaviors/{behavior}', [AdminBehaviorController::class, 'update'])->name('behaviors.update');
     Route::delete('behaviors/{behavior}', [AdminBehaviorController::class, 'destroy'])->name('behaviors.destroy');
     Route::get('/admin/behaviors/{behavior}/drivers', [AdminBehaviorController::class, 'driverBehavior'])->name('behaviors.drivers');
+});
+
+Route::prefix('reports')->middleware(['auth'])->group(function () {
+    Route::get('/', [ReportController::class, 'index'])->name('reports.index');
+
+    Route::get('/drivers', [ReportController::class, 'driverReports'])->name('reports.drivers');
+    Route::get('/behaviors', [ReportController::class, 'behaviorReports'])->name('reports.behaviors');
+    Route::get('/incidents', [ReportController::class, 'incidentReports'])->name('reports.incidents');
+
 });
 
 /*------------------------------------------

@@ -13,28 +13,34 @@ return new class extends Migration
     {
         Schema::create('driver_behaviors', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('driver_id')
                 ->constrained('drivers')
                 ->cascadeOnDelete();
 
-
             $table->foreignId('behavior_type_id')
-                ->constrained('behavior_types');
+                ->constrained('behavior_types')
+                ->cascadeOnDelete();
 
-
+            $table->enum('type', ['positive', 'negative']);   // 🔥 new
             $table->enum('severity', ['low', 'medium', 'high']);
-            $table->integer('score');
-            $table->date('behavior_date');
-            $table->text('description')->nullable();
 
+            $table->integer('score'); // score change (+ or -)
+
+            $table->date('behavior_date');
+            $table->date('recorded_month'); // 🔥 new (for reports)
+
+            $table->text('description')->nullable();
 
             $table->foreignId('reported_by')
                 ->nullable()
                 ->constrained('users')
                 ->nullOnDelete();
+
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
