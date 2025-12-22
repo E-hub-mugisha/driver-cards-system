@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CompanyStaff extends Model
 {
     use HasFactory;
-    
+
     use SoftDeletes;
 
-     protected $fillable = ['company_id','user_id','name','email','role','status'];
+    protected $fillable = ['company_id', 'user_id', 'name', 'email', 'role', 'status'];
 
     protected $dates = ['deleted_at'];
 
