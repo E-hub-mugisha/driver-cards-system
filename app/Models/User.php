@@ -1,16 +1,17 @@
 <?php
-  
+
 namespace App\Models;
-  
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'type'
+        'type',
+        'status'
     ];
 
     /**
@@ -55,7 +57,24 @@ class User extends Authenticatable
     protected function type(): Attribute
     {
         return new Attribute(
-            get: fn ($value) =>  ["user", "admin", "manager"][$value],
+            get: fn($value) =>  ["user", "admin", "manager", "supervisor"][$value],
+        );
+    }
+
+    public function staff()
+    {
+        return $this->hasOne(CompanyStaff::class);
+    }
+
+    public function company()
+    {
+        return $this->hasOneThrough(
+            Company::class,
+            CompanyStaff::class,
+            'user_id',
+            'id',
+            'id',
+            'company_id'
         );
     }
 }

@@ -1,101 +1,156 @@
-<div class="az-header">
-  <div class="container">
-    <div class="az-header-left">
-      <a href="index.html" class="az-logo"><img src="{{ asset('assets/img/logo/atpr.png')}}" alt="" height="50px" /></a>
-      <a href="#" id="azMenuShow" class="az-header-menu-icon d-lg-none"><span></span></a>
-    </div><!-- az-header-left -->
-    <div class="az-header-menu">
-      <div class="az-header-menu-header">
-        <a href="index.html" class="az-logo"><img src="{{ asset('assets/img/logo/atpr.png')}}" alt="" height="50px" /></a>
-        <a href="#" class="close">&times;</a>
-      </div><!-- az-header-menu-header -->
-      <ul class="nav">
-        @if(auth()->user()->type == 'admin')
-        <li class="nav-item">
-          <a href="{{ route('admin.home') }}" class="nav-link">Dashboard</a>
-        </li>
-        @elseif(auth()->user()->type == 'manager')
-        <li class="nav-item">
-          <a href="{{ route('manager.home') }}" class="nav-link">Dashboard</a>
-        </li>
-        @else
-        <li class="nav-item">
-          <a href="{{ route('driver.index') }}" class="nav-link">Dashboard</a>
-        </li>
-        @endif
-        <li class="nav-item">
-          <a href="{{ route('member.index')}}" class="nav-link"><span>Members List</span></a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('admin.users')}}" class="nav-link"><span>Staff users</span></a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('admin.create')}}" class="nav-link"><span>Add Driver</span></a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('admin.index')}}" class="nav-link"><span>Driver</span></a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('admin.behaviors.index') }}" class="nav-link"><span>Behavior</span></a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('member.report')}}" class="nav-link"><span>Members Report</span></a>
-        </li>
-      </ul>
-    </div><!-- az-header-menu -->
-    <div class="az-header-right">
-      <div class="dropdown az-header-notification">
-        <a href="#" class="new"><i class="typcn typcn-bell"></i></a>
-        <div class="dropdown-menu">
-          <div class="az-dropdown-header mg-b-20 d-sm-none">
-            <a href="#" class="az-header-arrow"><i class="icon ion-md-arrow-back"></i></a>
-          </div>
-          <h6 class="az-notification-title">Notifications</h6>
-          <p class="az-notification-text">You have 2 unread notification</p>
-          <div class="az-notification-list">
-            <div class="media new">
-              <div class="az-img-user"><img src="../img/faces/face2.jpg" alt=""></div>
-              <div class="media-body">
-                <p>new driver <strong> Eric</strong> created</p>
-                <span>Mar 15 12:32pm</span>
-              </div>
+<div class="nk-header nk-header-fixed is-light">
+  <div class="container-fluid">
+    <div class="nk-header-wrap">
+      <div class="nk-menu-trigger d-xl-none ms-n1"><a href="#"
+          class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em
+            class="icon ni ni-menu"></em></a></div>
+      <div class="nk-header-brand d-xl-none"><a href="../../index.html" class="logo-link"><img
+            class="logo-light logo-img" src="../../images/logo.png"
+            srcset="/demo1/images/logo2x.png 2x" alt="logo"><img class="logo-dark logo-img"
+            src="../../images/logo-dark.png" srcset="/demo1/images/logo-dark2x.png 2x"
+            alt="logo-dark"></a></div>
+      <div class="nk-header-news d-none d-xl-block">
+        <div class="nk-news-list"><a class="nk-news-item" href="#">
+            <div class="nk-news-icon"><em class="icon ni ni-card-view"></em></div>
+            <div class="nk-news-text">
+              <p>Do you know the latest update of 2022? <span> A overview of our is now
+                  available on YouTube</span></p><em class="icon ni ni-external"></em>
             </div>
-            <div class="media new">
-              <div class="az-img-user online"><img src="../img/faces/face3.jpg" alt=""></div>
-              <div class="media-body">
-                <p><strong>Joyce Chua</strong> just created </p>
-                <span>Mar 13 04:16am</span>
-              </div>
-            </div>
-          </div>
-          <div class="dropdown-footer"><a href="#">View All Notifications</a></div>
-        </div><!-- dropdown-menu -->
-      </div><!-- az-header-notification -->
-      <div class="dropdown az-profile-menu">
-        <a href="#" class="az-img-user"><img src="{{ asset('assets/src/img/faces/download.png') }}" alt=""></a>
-        <div class="dropdown-menu">
-          <div class="az-dropdown-header d-sm-none">
-            <a href="#" class="az-header-arrow"><i class="icon ion-md-arrow-back"></i></a>
-          </div>
-          <div class="az-header-profile">
-            <div class="az-img-user">
-              <img src="{{ asset('assets/src/img/faces/download.png') }}" alt="">
-            </div><!-- az-img-user -->
-            <h6>{{ Auth::user()->name }}</h6>
-            <span>{{ Auth::user()->type }}</span>
-          </div><!-- az-header-profile -->
-          <a href="#" class="dropdown-item"><i class="typcn typcn-cog-outline"></i> Account Settings</a>
-          <a href="#" class="dropdown-item"
-            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="typcn typcn-power-outline"></i> Sign Out
-          </a>
-
-          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-          </form>
-
-        </div><!-- dropdown-menu -->
+          </a></div>
       </div>
-    </div><!-- az-header-right -->
-  </div><!-- container -->
-</div><!-- az-header -->
+      <div class="nk-header-tools">
+        <ul class="nk-quick-nav">
+          <li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle"
+              data-bs-toggle="dropdown">
+              <div class="user-toggle">
+                <div class="user-avatar sm"><em class="icon ni ni-user-alt"></em></div>
+                <div class="user-info d-none d-md-block">
+                  <div class="user-status">{{ Auth::user()->type }}</div>
+                  <div class="user-name dropdown-indicator">{{ Auth::user()->name }}</div>
+                </div>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-md dropdown-menu-end dropdown-menu-s1">
+              <div class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
+                <div class="user-card">
+                  <div class="user-avatar"><span>AB</span></div>
+                  <div class="user-info">
+                    <span class="lead-text">
+                      {{ Auth::user()->name }}
+                    </span>
+                    <span class="sub-text">{{ Auth::user()->email }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown-inner">
+                <ul class="link-list">
+                  <li><a href="../../user-profile-regular.html"><em
+                        class="icon ni ni-user-alt"></em><span>View
+                        Profile</span></a></li>
+                  <li><a href="../../user-profile-setting.html"><em
+                        class="icon ni ni-setting-alt"></em><span>Account
+                        Setting</span></a></li>
+                  <li><a href="../../user-profile-activity.html"><em
+                        class="icon ni ni-activity-alt"></em><span>Login
+                        Activity</span></a></li>
+                </ul>
+              </div>
+              <div class="dropdown-inner">
+                <ul class="link-list">
+                  <li>
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                      <em class="icon ni ni-signout"></em>
+                      <span>Sign out</span>
+                    </a>
+                  </li>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                  </form>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li class="dropdown notification-dropdown me-n1"><a href="#"
+              class="dropdown-toggle nk-quick-nav-icon" data-bs-toggle="dropdown">
+              <div class="icon-status icon-status-info"><em class="icon ni ni-bell"></em>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end dropdown-menu-s1">
+              <div class="dropdown-head"><span
+                  class="sub-title nk-dropdown-title">Notifications</span><a
+                  href="#">Mark All as Read</a></div>
+              <div class="dropdown-body">
+                <div class="nk-notification">
+                  <div class="nk-notification-item dropdown-inner">
+                    <div class="nk-notification-icon"><em
+                        class="icon icon-circle bg-warning-dim ni ni-curve-down-right"></em>
+                    </div>
+                    <div class="nk-notification-content">
+                      <div class="nk-notification-text">You have requested to
+                        <span>Widthdrawl</span>
+                      </div>
+                      <div class="nk-notification-time">2 hrs ago</div>
+                    </div>
+                  </div>
+                  <div class="nk-notification-item dropdown-inner">
+                    <div class="nk-notification-icon"><em
+                        class="icon icon-circle bg-success-dim ni ni-curve-down-left"></em>
+                    </div>
+                    <div class="nk-notification-content">
+                      <div class="nk-notification-text">Your <span>Deposit
+                          Order</span> is placed</div>
+                      <div class="nk-notification-time">2 hrs ago</div>
+                    </div>
+                  </div>
+                  <div class="nk-notification-item dropdown-inner">
+                    <div class="nk-notification-icon"><em
+                        class="icon icon-circle bg-warning-dim ni ni-curve-down-right"></em>
+                    </div>
+                    <div class="nk-notification-content">
+                      <div class="nk-notification-text">You have requested to
+                        <span>Widthdrawl</span>
+                      </div>
+                      <div class="nk-notification-time">2 hrs ago</div>
+                    </div>
+                  </div>
+                  <div class="nk-notification-item dropdown-inner">
+                    <div class="nk-notification-icon"><em
+                        class="icon icon-circle bg-success-dim ni ni-curve-down-left"></em>
+                    </div>
+                    <div class="nk-notification-content">
+                      <div class="nk-notification-text">Your <span>Deposit
+                          Order</span> is placed</div>
+                      <div class="nk-notification-time">2 hrs ago</div>
+                    </div>
+                  </div>
+                  <div class="nk-notification-item dropdown-inner">
+                    <div class="nk-notification-icon"><em
+                        class="icon icon-circle bg-warning-dim ni ni-curve-down-right"></em>
+                    </div>
+                    <div class="nk-notification-content">
+                      <div class="nk-notification-text">You have requested to
+                        <span>Widthdrawl</span>
+                      </div>
+                      <div class="nk-notification-time">2 hrs ago</div>
+                    </div>
+                  </div>
+                  <div class="nk-notification-item dropdown-inner">
+                    <div class="nk-notification-icon"><em
+                        class="icon icon-circle bg-success-dim ni ni-curve-down-left"></em>
+                    </div>
+                    <div class="nk-notification-content">
+                      <div class="nk-notification-text">Your <span>Deposit
+                          Order</span> is placed</div>
+                      <div class="nk-notification-time">2 hrs ago</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown-foot center"><a href="#">View All</a></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

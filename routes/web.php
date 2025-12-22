@@ -2,8 +2,14 @@
 
 use App\Http\Controllers\Admin\AdminBehaviorController;
 use App\Http\Controllers\Admin\AdminDriverController;
+use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\CompanyStaffController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DriversController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Company\CompanyDashboardController;
 use App\Http\Controllers\DriverController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,20 +53,19 @@ All Admin Routes List
 --------------------------------------------*/
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
-    Route::get('/admin/home', [HomeController::class, 'dashboard'])->name('admin.home');
-    Route::get('/admin/driver', [HomeController::class, 'adminHome'])->name('admin.index');
-    Route::get('/admin/driver/create', [HomeController::class, 'create'])->name('admin.create');
-    Route::get('/admin/users', [HomeController::class, 'systemUsers'])->name('admin.users');
+    Route::get('/admin/home', [DashboardController::class, 'index'])->name('admin.home');
+    Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
+    Route::put('/admin/users/{user}/status', [UserController::class, 'updateStatus'])
+        ->name('admin.users.updateStatus');
+    Route::post('/admin/users/{user}/reset-password', [UserController::class, 'resetPassword'])
+        ->name('admin.users.reset-password');
+    Route::put('/admin/users/{user}', [UserController::class, 'update'])
+        ->name('admin.users.update');
+    Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])
+        ->name('admin.users.destroy');
     Route::put('/admin/users/admin/{id}', [HomeController::class, 'adminUsers'])->name('users.admin');
     Route::delete('/admin/users/delete/{id}', [HomeController::class, 'destroyUsers'])->name('users.delete');
-    Route::post('/admin/driver/add', [HomeController::class, 'store'])->name('admin.store');
-    Route::get('/admin/driver/{id}', [HomeController::class, "show"])->name('admin.show');
-    Route::get('/admin/driver/edit/{id}', [HomeController::class, "edit"])->name('admin.edit');
-    Route::put('/admin/driver/update/{id}', [HomeController::class, "update"])->name('admin.update');
-    Route::put('/admin/driver/approval/{id}', [HomeController::class, "approval"])->name('admin.approval');
-    Route::put('/admin/driver/pending/{id}', [HomeController::class, "pending"])->name('admin.pending');
-    Route::put('/admin/driver/decline/{id}', [HomeController::class, "decline"])->name('admin.decline');
-    Route::delete('/admin/driver/delete/{id}', [HomeController::class, "destroy"])->name('admin.destroy');
     Route::get('drivers-export', [HomeController::class, 'export'])->name('drivers.export');
     Route::get('drivers/export/{name}/{status}', [MembersController::class, 'exportDriver'])->name('drivers.exportByCompany');
     Route::get('driversByMember-export/{name}/{status}', [HomeController::class, 'exportDriver'])->name('driversByMember.export');
@@ -77,6 +82,33 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::post('/admin/drivers/{driver}/behaviors', [AdminDriverController::class, 'storeBehavior'])->name('admin.drivers.behaviors.store');
     Route::get('/admin/drivers/{driver}/behaviors', [AdminDriverController::class, 'indexBehavior'])->name('admin.drivers.behaviors.index');
+
+    Route::get('/admin/companies', [CompanyController::class, 'index'])->name('admin.companies.index');
+    Route::post('/admin/companies', [CompanyController::class, 'store'])->name('admin.companies.store');
+    Route::post('/admin/companies/{company}', [CompanyController::class, 'update'])->name('admin.companies.update');
+    Route::post('/admin/companies/{company}/delete', [CompanyController::class, 'destroy'])->name('admin.companies.destroy');
+
+    Route::get('/admin/companies/{company}/staff', [CompanyStaffController::class, 'index'])
+        ->name('admin.company.staff.index');
+
+    Route::post('/admin/companies/{company}/staff', [CompanyStaffController::class, 'store'])
+        ->name('admin.company.staff.store');
+    Route::put('/admin/company-staff/{staff}/update', [CompanyStaffController::class, 'update'])
+        ->name('admin.company.staff.update');
+
+    Route::delete('/admin/company-staff/{staff}', [CompanyStaffController::class, 'destroy'])
+        ->name('admin.company.staff.destroy');
+
+    Route::post('/admin/company-staff/{staff}/reset-password', [CompanyStaffController::class, 'resetPassword'])
+        ->name('admin.company.staff.reset-password');
+
+    Route::prefix('admin/drivers')->name('admin.drivers.')->group(function () {
+        Route::get('/', [DriversController::class, 'index'])->name('index');
+        Route::post('/store', [DriversController::class, 'store'])->name('store');
+        Route::post('/{driver}/update', [DriversController::class, 'update'])->name('update');
+        Route::delete('/{driver}/destroy', [DriversController::class, 'destroy'])->name('destroy');
+        Route::post('/{driver}/restore', [DriversController::class, 'restore'])->name('restore');
+    });
 });
 
 Route::middleware(['auth', 'user-access:admin'])->prefix('admin')->name('admin.')->group(function () {

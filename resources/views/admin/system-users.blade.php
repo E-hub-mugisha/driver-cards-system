@@ -5,7 +5,24 @@
 <!-- Breadcomb area Start-->
 <div class="container">
     <div class="az-content-body pd-lg-l-40 d-flex flex-column">
-        <h2 class="az-content-title">@yield('title')</h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="az-content-title">@yield('title')</h2>
+
+            <!-- BUTTONS -->
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary btn-rounded"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModalAddDriver">
+                    Add User
+                </button>
+
+                <a href="{{ route('drivers.export') }}"
+                    class="btn btn-success btn-rounded">
+                    Download Report
+                </a>
+            </div>
+
+        </div>
         <div>
             <table class="table" id="example2">
                 <thead>
@@ -13,7 +30,8 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>User Type</th>
+                        <th>User Role</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -25,9 +43,18 @@
                         <td>{{ $user->email }}</td>
                         <td>
                             @if( $user->type == 'admin')
-                            <span class="badge badge-success notika-btn-success waves-effect">Admin</span>
+                            <span class="text-success">Admin</span>
                             @else
-                            <span class="badge badge-primary notika-btn-primary waves-effect">Member User</span>
+                            <span class="text-primary">Member User</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if( $user->status == 'Active')
+                            <span class="text-success">
+                                {{ ucfirst($user->status) }}
+                            </span>
+                            @else
+                            <span class="text-dange">{{ ucfirst($user->status) }}</span>
                             @endif
                         </td>
                         <td>

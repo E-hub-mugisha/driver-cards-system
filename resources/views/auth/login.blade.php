@@ -1,89 +1,60 @@
-<!-- Laravel Auth Login (Bootstrap 5) -->
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.auth')
+@section('title', 'Login')
+@section('content')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | {{ config('app.name') }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            height: 100vh;
-            background: #00ADEE;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .auth-card {
-            background: rgba(255, 255, 255);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 530px;
-            color: #000000;
-        }
-
-        label {
-            color: #000000;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="auth-card">
-        <h2 class="text-center fw-bold mb-4">Login</h2>
-
-        @if(session('status'))
-        <div class="alert alert-success">{{ session('status') }}</div>
-        @endif
-
-        <!-- If user is logged in - show dashboard button -->
-        @auth
-        <p class="mb-3">The user {{ Auth::user()->name }} is currently logged in click button below to proceed</p>
-        <div class="text-center mb-3">
-            @if(auth()->user()->type == 'admin')
-            <a href="{{ route('admin.home') }}" class="btn btn-success w-100 fw-bold">Go to Admin Dashboard</a>
-            @elseif(auth()->user()->type == 'manager')
-            <a href="{{ route('manager.home') }}" class="btn btn-success w-100 fw-bold">Manager Dashboard</a>
-            @else
-            <a href="{{ route('driver.index') }}" class="btn btn-success w-100 fw-bold">Driver Dashboard</a>
-            @endif
+<div class="nk-block nk-block-middle nk-auth-body">
+    <div class="brand-logo pb-5">
+        <a href="../../index.html" class="logo-link">
+            <img class="logo-light logo-img logo-img-lg" src="../../images/logo.png" srcset="/demo1/images/logo2x.png 2x" alt="logo">
+            <img class="logo-dark logo-img logo-img-lg" src="../../images/logo-dark.png" srcset="/demo1/images/logo-dark2x.png 2x" alt="logo-dark">
+        </a>
+    </div>
+    <div class="nk-block-head">
+        <div class="nk-block-head-content">
+            <h5 class="nk-block-title">Sign-In</h5>
+            <div class="nk-block-des">
+                <p>Access the DashLite panel using your email and passcode.</p>
+            </div>
         </div>
-        @endauth
-
-        <!-- Show form only when user is NOT logged in -->
-        @guest
-        <form action="{{ route('login') }}" method="POST" class="mt-3">
-            @csrf
-
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" required>
+    </div>
+    <form action="{{ route('login') }}" class="form-validate is-alter" method="POST">
+        @csrf
+        <div class="form-group">
+            <div class="form-label-group">
+                <label class="form-label" for="email-address">Email or Username</label>
+                <a class="link link-primary link-sm" tabindex="-1" href="#">Need Help?</a>
+            </div>
+            <div class="form-control-wrap">
+                <input type="text" name="email" class="form-control form-control-lg" required id="email" placeholder="Enter your email address or username">
                 @error('email')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <div class="form-label-group">
+                <label class="form-label" for="password">Passcode</label>
+                <a class="link link-primary link-sm" tabindex="-1" href="/password/reset">Forgot Code?</a>
+            </div>
+            <div class="form-control-wrap">
+                <a tabindex="-1" href="#" class="form-icon form-icon-right passcode-switch lg" data-target="password">
+                    <em class="passcode-icon icon-show icon ni ni-eye"></em>
+                    <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
+                </a>
+                <input name="password" type="password" class="form-control form-control-lg" required id="password" placeholder="Enter your passcode">
                 @error('password')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
-
-            <button class="btn btn-primary w-100 fw-bold">Login</button>
-
-            <p class="text-center mt-3">
-                Don’t have an account? <a href="{{ route('register') }}" class="fw-bold">Register</a>
-            </p>
-        </form>
-        @endguest
-
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-lg btn-primary btn-block">
+                Sign in
+            </button>
+        </div>
+    </form>
+    <div class="form-note-s2 pt-4"> New on our platform?
+        <a href="{{ route('register') }}">
+            Create an account
+        </a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+</div>
 
-</html>
+@endsection
