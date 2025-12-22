@@ -58,6 +58,10 @@
                         class="btn btn-sm btn-outline-primary">
                         View Staff
                     </a>
+                    <a href="{{ route('admin.company.drivers.index',$company->id) }}"
+                        class="btn btn-sm btn-outline-primary">
+                        View drivers
+                    </a>
                     <button class="btn btn-sm btn-warning"
                         data-bs-toggle="modal"
                         data-bs-target="#editCompanyModal{{ $company->id }}">

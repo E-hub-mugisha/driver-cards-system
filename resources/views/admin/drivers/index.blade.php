@@ -56,6 +56,7 @@
                 <td>{{ $driver->company?->name ?? '-' }}</td>
                 <td>{{ ucfirst($driver->status) }}</td>
                 <td>
+                    <a href="{{ route('admin.drivers.show', $driver->id )}}" class="btn btn-info">View Details</a>
                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editDriverModal{{ $driver->id }}">Edit</button>
                     <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDriverModal{{ $driver->id }}">Remove</button>
                 </td>
@@ -87,6 +88,7 @@
                 <td>{{ $driver->company?->name ?? '-' }}</td>
                 <td>{{ ucfirst($driver->status) }}</td>
                 <td>
+                    <a href="{{ route('admin.drivers.show', $driver->id ) }}" class="btn btn-info">View Details</a>
                     <form action="{{ route('admin.drivers.restore',$driver->id) }}" method="POST" class="d-inline">
                         @csrf
                         <button class="btn btn-success btn-sm">Restore</button>
@@ -152,10 +154,10 @@
                             <label>Contract Type</label>
                             <select name="contract_type" class="form-select">
                                 <option selected disabled>-- select contract type --</option>
-                                <option>3 Month</option>
-                                <option>6 Month</option>
-                                <option>12 Month</option>
-                                <option>Open Ended</option>
+                                <option value="3 month">3 Month</option>
+                                <option value="6 month">6 Month</option>
+                                <option value="12 month">12 Month</option>
+                                <option value="open ended">Open Ended</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -240,10 +242,10 @@
                         <div class="col-md-6">
                             <label>Contract Type</label>
                             <select name="contract_type" class="form-select">
-                                <option>3 Month</option>
-                                <option>6 Month</option>
-                                <option>12 Month</option>
-                                <option>Open Ended</option>
+                                <option value="3 month" {{ $driver->contract_type=='3 month'?'selected':'' }}>3 Month</option>
+                                <option value="6 month" {{ $driver->contract_type=='6 month'?'selected':'' }}>6 Month</option>
+                                <option value="12 month" {{ $driver->contract_type=='12 month'?'selected':'' }}>12 Month</option>
+                                <option value="open ended" {{ $driver->contract_type=='open ended'?'selected':'' }}>Open Ended</option>
                             </select>
                         </div>
                         <div class="col-md-6">

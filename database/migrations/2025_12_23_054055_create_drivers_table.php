@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('driver_license')->unique();
             $table->string('phone')->unique();
             $table->string('rssb')->nullable();
-            $table->enum('contract_type', ['permanent', 'temporary', 'internship'])->nullable();
+            $table->string('contract_type')->nullable();
             $table->string('insurance')->nullable();
             $table->string('photo')->nullable();
             $table->string('contract')->nullable();

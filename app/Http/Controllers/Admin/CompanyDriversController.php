@@ -3,34 +3,37 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\BehaviorCategory;
 use App\Models\Company;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 
-class DriversController extends Controller
+class CompanyDriversController extends Controller
 {
-    public function index()
+    public function companyDrivers(Company $company)
     {
-        $drivers = Driver::withTrashed()->with('company')->paginate(15);
-        $companies = Company::all();
-        return view('admin.drivers.index', compact('drivers', 'companies'));
+        $drivers = Driver::withTrashed()
+            ->where('company_id', $company->id)
+            ->get();
+
+        return view('admin.companies.drivers.index', compact('company', 'drivers'));
     }
 
-    public function store(Request $request)
+    public function storeForCompany(Request $request, Company $company)
     {
-        $request->validate([
+        $data = $request->validate([
             'names' => 'required',
-            'ID_number' => 'required|unique:drivers',
-            'driver_license' => 'required|unique:drivers',
-            'phone' => 'required|unique:drivers',
-            'company_id' => 'nullable|exists:companies,id',
-            'photo' => 'nullable|image|max:2048',
-            'contract' => 'nullable|file|max:5120',
+            'ID_number' => 'required',
+            'driver_license' => 'required',
+            'phone' => 'required',
+            'rssb' => 'nullable',
             'contract_type' => 'required',
+            'Insurance' => 'required',
+            'photo' => 'nullable|image|max:2048',
+            'contract' => 'nullable|mimes:pdf,docx|max:4096',
+            'status' => 'required'
         ]);
 
-        $data = $request->all();
+        $data['company_id'] = $company->id;
 
         if ($photo = $request->file('photo')) {
             $destinationPath = 'photo/';
@@ -51,20 +54,20 @@ class DriversController extends Controller
         return back()->with('success', 'Driver added successfully.');
     }
 
-    public function update(Request $request, Driver $driver)
+    public function updateForCompany(Request $request, Company $company, Driver $driver)
     {
-        $request->validate([
-            'names' => 'required',
-            'ID_number' => 'required|unique:drivers,ID_number,' . $driver->id,
-            'driver_license' => 'required|unique:drivers,driver_license,' . $driver->id,
-            'phone' => 'required|unique:drivers,phone,' . $driver->id,
-            'company_id' => 'nullable|exists:companies,id',
-            'photo' => 'nullable|image|max:2048',
-            'contract' => 'nullable|file|max:5120',
-            'contract_type' => 'required',
-        ]);
+        abort_if($driver->company_id != $company->id, 403);
 
-        $data = $request->all();
+        $data = $request->validate([
+            'names' => 'required',
+            'ID_number' => 'required',
+            'driver_license' => 'required',
+            'phone' => 'required',
+            'rssb' => 'nullable',
+            'contract_type' => 'required',
+            'Insurance' => 'required',
+            'status' => 'required'
+        ]);
 
         if ($photo = $request->file('photo')) {
             $destinationPath = 'photo/';
@@ -85,31 +88,22 @@ class DriversController extends Controller
         return back()->with('success', 'Driver updated successfully.');
     }
 
-    public function destroy(Driver $driver)
+    public function softDeleteForCompany(Company $company, Driver $driver)
     {
+        abort_if($driver->company_id != $company->id, 403);
+
         $driver->delete();
         return back()->with('success', 'Driver soft deleted.');
     }
 
-    public function restore($id)
+    public function restoreForCompany(Company $company, $driver)
     {
-        $driver = Driver::withTrashed()->findOrFail($id);
+        $driver = Driver::onlyTrashed()
+            ->where('company_id', $company->id)
+            ->where('id', $driver)
+            ->firstOrFail();
+
         $driver->restore();
         return back()->with('success', 'Driver restored successfully.');
-    }
-
-    public function show(Driver $driver)
-    {
-        $driver->load(['company', 'behaviors']); // make sure relationship exists
-        $categories = BehaviorCategory::with('behaviorTypes.driverBehaviors')->get();
-        $companies = Company::all();
-        return view('admin.drivers.show', compact('driver', 'categories','companies'));
-    }
-
-    public function approve(Driver $driver)
-    {
-        $driver->update(['status' => 'approved']);
-
-        return back()->with('success', 'Driver Approved Successfully');
     }
 }

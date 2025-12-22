@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminBehaviorController;
 use App\Http\Controllers\Admin\AdminDriverController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\CompanyDriversController;
 use App\Http\Controllers\Admin\CompanyStaffController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DriversController;
@@ -108,6 +109,17 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::post('/{driver}/update', [DriversController::class, 'update'])->name('update');
         Route::delete('/{driver}/destroy', [DriversController::class, 'destroy'])->name('destroy');
         Route::post('/{driver}/restore', [DriversController::class, 'restore'])->name('restore');
+        Route::get('/{driver}', [DriversController::class, 'show'])->name('show');
+        Route::post('/{driver}/approve', [DriversController::class, 'approve'])
+            ->name('approve');
+    });
+
+    Route::prefix('admin/companies/{company}')->group(function () {
+        Route::get('/drivers', [CompanyDriversController::class, 'companyDrivers'])->name('admin.company.drivers.index');
+        Route::post('/drivers', [CompanyDriversController::class, 'storeForCompany'])->name('admin.company.drivers.store');
+        Route::post('/drivers/{driver}', [CompanyDriversController::class, 'updateForCompany'])->name('admin.company.drivers.update');
+        Route::delete('/drivers/{driver}', [CompanyDriversController::class, 'softDeleteForCompany'])->name('admin.company.drivers.delete');
+        Route::post('/drivers/{driver}/restore', [CompanyDriversController::class, 'restoreForCompany'])->name('admin.company.drivers.restore');
     });
 });
 
