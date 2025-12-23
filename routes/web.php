@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CompanyStaffController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DriversController;
 use App\Http\Controllers\Admin\IncidentController;
+use App\Http\Controllers\Admin\PayrollProcessingController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -105,6 +106,14 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/admin/company-staff/{staff}/reset-password', [CompanyStaffController::class, 'resetPassword'])
         ->name('admin.company.staff.reset-password');
 
+    // Store new payroll setting
+    Route::post('/admin/company/payroll/settings', [CompanyController::class, 'storePayroll'])
+        ->name('admin.payroll.settings.store');
+
+    // Update existing payroll setting
+    Route::put('/admin/company/payroll/settings/{payrollSetting}', [CompanyController::class, 'updatePayroll'])
+        ->name('admin.payroll.settings.update');
+
     Route::prefix('admin/drivers')->name('admin.drivers.')->group(function () {
         Route::get('/', [DriversController::class, 'index'])->name('index');
         Route::post('/store', [DriversController::class, 'store'])->name('store');
@@ -148,8 +157,21 @@ Route::prefix('reports')->middleware(['auth'])->group(function () {
     Route::get('/drivers', [ReportController::class, 'driverReports'])->name('reports.drivers');
     Route::get('/behaviors', [ReportController::class, 'behaviorReports'])->name('reports.behaviors');
     Route::get('/incidents', [ReportController::class, 'incidentReports'])->name('reports.incidents');
-
 });
+
+Route::prefix('admin/payroll')->name('admin.payroll.')->group(function () {
+
+    Route::get('/', [PayrollProcessingController::class, 'index'])->name('index');
+
+    Route::post('/process', [PayrollProcessingController::class, 'process'])
+        ->name('process');
+
+    Route::post('/approve/{payroll}', [PayrollProcessingController::class, 'approve'])
+        ->name('approve');
+    Route::post('/reject/{payroll}', [PayrollProcessingController::class, 'reject'])
+        ->name('reject');
+});
+
 
 /*------------------------------------------
 --------------------------------------------

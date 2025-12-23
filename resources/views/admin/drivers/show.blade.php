@@ -245,46 +245,46 @@
                         </thead>
 
                         <tbody>
-                            @forelse($driver->incidents as $i)
+                            @forelse($driver->incidents as $incident)
                             <tr>
-                                <td>{{ $i->incident_date }}</td>
-                                <td>{{ ucfirst($i->type) }}</td>
+                                <td>{{ $incident->incident_date }}</td>
+                                <td>{{ ucfirst($incident->type) }}</td>
 
                                 <td>
                                     <span class="badge
-                        @if($i->severity=='low') bg-info
-                        @elseif($i->severity=='medium') bg-warning
-                        @elseif($i->severity=='high') bg-danger
-                        @else bg-dark @endif">
-                                        {{ ucfirst($i->severity) }}
+@if($incident->severity=='low') bg-info
+@elseif($incident->severity=='medium') bg-warning
+@elseif($incident->severity=='high') bg-danger
+@else bg-dark @endif">
+                                        {{ ucfirst($incident->severity) }}
                                     </span>
                                 </td>
 
-                                <td>{{ $i->impact_score }}</td>
+                                <td>{{ $incident->impact_score }}</td>
 
                                 <td>
-                                    @if($i->evidence)
-                                    <a href="{{ asset('storage/'.$i->evidence) }}" target="_blank">
-                                        View
-                                    </a>
+                                    @if($incident->evidence)
+                                    <a href="{{ asset('storage/'.$incident->evidence) }}" target="_blank">View</a>
                                     @else
                                     <span class="text-muted">No Evidence</span>
                                     @endif
                                 </td>
 
-                                <td>{{ $i->reported_by }}</td>
+                                <td>{{ $incident->reported_by }}</td>
+
                                 <td>
                                     <span class="badge
- @if($i->approval_status=='pending') bg-warning
- @elseif($i->approval_status=='approved') bg-success
- @else bg-danger @endif">
-                                        {{ ucfirst($i->approval_status) }}
+@if($incident->approval_status=='pending') bg-warning
+@elseif($incident->approval_status=='approved') bg-success
+@else bg-danger @endif">
+                                        {{ ucfirst($incident->approval_status) }}
                                     </span>
                                 </td>
+
                                 <td>
-                                    @if($i->approval_status=='pending')
+                                    @if($incident->approval_status=='pending')
                                     <form method="POST"
-                                        action="{{ route('admin.drivers.incidents.approve',$i) }}"
+                                        action="{{ route('admin.drivers.incidents.approve',$incident) }}"
                                         class="d-inline">
                                         @csrf
                                         <button class="btn btn-sm btn-success">Approve</button>
@@ -292,18 +292,50 @@
 
                                     <button class="btn btn-sm btn-danger"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#rejectIncident{{ $i->id }}">
+                                        data-bs-target="#rejectIncident{{ $incident->id }}">
                                         Reject
                                     </button>
                                     @endif
                                 </td>
                             </tr>
+
+                            {{-- Modal MUST be inside the loop --}}
+                            <div class="modal fade" id="rejectIncident{{ $incident->id }}">
+                                <div class="modal-dialog">
+                                    <form class="modal-content"
+                                        method="POST"
+                                        action="{{ route('admin.drivers.incidents.reject',$incident) }}">
+                                        @csrf
+
+                                        <div class="modal-header">
+                                            <h5>Reject Incident</h5>
+                                            <button class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <textarea name="rejection_reason"
+                                                class="form-control"
+                                                placeholder="Reason for rejection"
+                                                required></textarea>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button class="btn btn-danger">Reject</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
                             @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted">No incidents recorded</td>
+                                <td colspan="8" class="text-center text-muted">
+                                    No incidents recorded
+                                </td>
                             </tr>
                             @endforelse
                         </tbody>
+
                     </table>
                 </div>
 
@@ -433,33 +465,6 @@
         severitySelect.addEventListener('change', updateScore);
     });
 </script>
-
-<div class="modal fade" id="rejectIncident{{ $i->id }}">
-    <div class="modal-dialog">
-        <form class="modal-content"
-            method="POST"
-            action="{{ route('admin.drivers.incidents.reject',$i) }}">
-            @csrf
-
-            <div class="modal-header">
-                <h5>Reject Incident</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body">
-                <textarea name="rejection_reason"
-                    class="form-control"
-                    placeholder="Reason for rejection"
-                    required></textarea>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button class="btn btn-danger">Reject</button>
-            </div>
-        </form>
-    </div>
-</div>
 
 
 <div class="modal fade" id="addIncidentModal-{{ $driver->id }}">

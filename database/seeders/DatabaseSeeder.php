@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             BehaviorCategoriesSeeder::class,
             DriverSeeder::class,
             DriverBehaviorSeeder::class,
+            IncidentSeeder::class,
         ]);
 
     }

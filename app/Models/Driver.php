@@ -69,8 +69,11 @@ class Driver extends Model
     }
 
     public function incidents()
-{
-    return $this->hasMany(Incident::class);
-}
-
+    {
+        return $this->hasMany(Incident::class);
+    }
+    public function payrollDetails()
+    {
+        return $this->hasMany(PayrollDetail::class);
+    }
 }

@@ -9,7 +9,11 @@ class Company extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name','email','phone','address','status'
+        'name',
+        'email',
+        'phone',
+        'address',
+        'status'
     ];
 
     public function drivers()
@@ -20,5 +24,14 @@ class Company extends Model
     public function staff()
     {
         return $this->hasMany(CompanyStaff::class);
+    }
+    public function payrollSettings()
+    {
+        return $this->hasOne(PayrollSetting::class);
+    }
+
+    public function payrolls()
+    {
+        return $this->hasMany(Payroll::class);
     }
 }

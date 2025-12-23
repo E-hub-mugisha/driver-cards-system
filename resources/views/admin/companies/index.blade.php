@@ -62,6 +62,9 @@
                         class="btn btn-sm btn-outline-primary">
                         View drivers
                     </a>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#payrollSettingsModal{{ $company->id }}">
+                        Payroll Settings
+                    </button>
                     <button class="btn btn-sm btn-warning"
                         data-bs-toggle="modal"
                         data-bs-target="#editCompanyModal{{ $company->id }}">
@@ -75,6 +78,8 @@
                     </button>
                 </td>
             </tr>
+
+
 
             <!-- Edit Modal -->
             <div class="modal fade" id="editCompanyModal{{ $company->id }}">
@@ -156,6 +161,73 @@
     {{ $companies->links() }}
 </div>
 
+@foreach( $companies as $company)
+<!-- Payroll Settings Modal -->
+<div class="modal fade" id="payrollSettingsModal{{ $company->id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <form class="modal-content"
+            method="POST"
+            @if($company->payrollSettings)
+            action="{{ route('admin.payroll.settings.update', $company->payrollSettings->id) }}"
+            @else
+            action="{{ route('admin.payroll.settings.store') }}"
+            @endif>
+
+            @csrf
+            @if($company->payrollSettings) @method('PUT') @endif
+
+            <input type="hidden" name="company_id" value="{{ $company->id }}">
+
+            <div class="modal-header">
+                <h5>Payroll Settings — {{ $company->name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    <label>Salary Type</label>
+                    <select name="salary_type" class="form-select">
+                        <option value="fixed" {{ optional($company->payrollSettings)->salary_type=='fixed'?'selected':'' }}>Fixed</option>
+                        <option value="per_trip" {{ optional($company->payrollSettings)->salary_type=='per_trip'?'selected':'' }}>Per Trip</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Base Salary</label>
+                    <input type="number" step="0.01" name="base_salary" class="form-control"
+                        value="{{ optional($company->payrollSettings)->base_salary }}">
+                </div>
+
+                <div class="mb-3">
+                    <label>Trip Rate</label>
+                    <input type="number" step="0.01" name="trip_rate" class="form-control"
+                        value="{{ optional($company->payrollSettings)->trip_rate }}">
+                </div>
+
+                <div class="mb-3">
+                    <label>Tax Rate (%)</label>
+                    <input type="number" step="0.01" name="tax_rate" class="form-control"
+                        value="{{ optional($company->payrollSettings)->tax_rate }}">
+                </div>
+
+                <div class="mb-3">
+                    <label>RSSB Rate (%)</label>
+                    <input type="number" step="0.01" name="rssb_rate" class="form-control"
+                        value="{{ optional($company->payrollSettings)->rssb_rate }}">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-success">Save Settings</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+@endforeach
 
 <!-- Create Modal -->
 <div class="modal fade" id="createCompanyModal">
