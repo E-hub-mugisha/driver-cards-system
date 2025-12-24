@@ -5,8 +5,8 @@
 <div class="nk-block nk-block-middle nk-auth-body">
     <div class="brand-logo pb-5">
         <a href="#" class="logo-link">
-            <img class="logo-light logo-img logo-img-lg" src="{{ asset('assets/images/logo.png') }}" srcset="{{ asset('assets/images/logo.png') }}" alt="logo">
-            <img class="logo-dark logo-img logo-img-lg" src="{{ asset('assets/images/logo.png') }}" srcset="{{ asset('assets/images/logo.png') }}" alt="logo-dark">
+            <img class="logo-light logo-img logo-img-lg" src="{{ asset('assets/images/atpr_logo.png') }}" srcset="{{ asset('assets/images/atpr_logo.png') }}" alt="logo">
+            <img class="logo-dark logo-img logo-img-lg" src="{{ asset('assets/images/atpr_logo.png') }}" srcset="{{ asset('assets/images/atpr_logo.png') }}" alt="logo-dark">
         </a>
     </div>
     <div class="nk-block-head">

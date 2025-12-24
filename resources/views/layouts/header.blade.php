@@ -5,9 +5,9 @@
           class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em
             class="icon ni ni-menu"></em></a></div>
       <div class="nk-header-brand d-xl-none"><a href="#" class="logo-link"><img
-            class="logo-light logo-img" src="{{ asset('assets/images/logo.png') }}"
-            srcset="{{ asset('assets/images/logo.png') }}" alt="logo"><img class="logo-dark logo-img"
-            src="{{ asset('assets/images/logo.png') }}" srcset="{{ asset('assets/images/logo.png') }}"
+            class="logo-light logo-img" src="{{ asset('assets/images/atpr_logo.png') }}"
+            srcset="{{ asset('assets/images/atpr_logo.png') }}" alt="logo"><img class="logo-dark logo-img"
+            src="{{ asset('assets/images/atpr_logo.png') }}" srcset="{{ asset('assets/images/atpr_logo.png') }}"
             alt="logo-dark"></a></div>
       <div class="nk-header-news d-none d-xl-block">
         <div class="nk-news-list"><a class="nk-news-item" href="#">

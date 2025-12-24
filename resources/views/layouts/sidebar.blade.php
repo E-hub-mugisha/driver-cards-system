@@ -10,8 +10,8 @@
         </div>
         <div class="nk-sidebar-brand">
             <a href="{{ route('admin.home') }}" class="logo-link nk-sidebar-logo">
-                <img class="logo-light logo-img" src="{{ asset('assets/images/logo.png') }}" alt="logo">
-                <img class="logo-dark logo-img" src="{{ asset('assets/images/logo.png') }}" alt="logo-dark">
+                <img class="logo-light logo-img" src="{{ asset('assets/images/atpr_logo.png') }}" alt="logo">
+                <img class="logo-dark logo-img" src="{{ asset('assets/images/atpr_logo.png') }}" alt="logo-dark">
             </a>
         </div>
     </div>
@@ -99,6 +99,13 @@
                         <a href="{{ route('reports.index')}}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-report"></em></span>
                             <span class="nk-menu-text">Reports</span>
+                        </a>
+                    </li>
+
+                    <li class="nk-menu-item">
+                        <a href="{{ route('admin.company.behavior.page')}}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-report"></em></span>
+                            <span class="nk-menu-text">Behaviors Report</span>
                         </a>
                     </li>
 

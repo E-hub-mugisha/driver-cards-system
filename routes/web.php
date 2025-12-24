@@ -157,6 +157,9 @@ Route::middleware(['auth', 'user-access:admin'])->prefix('admin')->name('admin.'
     Route::put('behaviors/{behavior}', [AdminBehaviorController::class, 'update'])->name('behaviors.update');
     Route::delete('behaviors/{behavior}', [AdminBehaviorController::class, 'destroy'])->name('behaviors.destroy');
     Route::get('/admin/behaviors/{behavior}/drivers', [AdminBehaviorController::class, 'driverBehavior'])->name('behaviors.drivers');
+
+    Route::get('/company-behavior', [AdminBehaviorController::class, 'indexDrivers'])->name('company.behavior.page');
+    Route::get('/company-behavior/drivers/{company}', [AdminBehaviorController::class, 'getDrivers']);
 });
 
 Route::prefix('reports')->middleware(['auth'])->group(function () {
