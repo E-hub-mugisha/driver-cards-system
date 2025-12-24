@@ -4,16 +4,16 @@
 
 <div class="nk-block nk-block-middle nk-auth-body">
     <div class="brand-logo pb-5">
-        <a href="../../index.html" class="logo-link">
-            <img class="logo-light logo-img logo-img-lg" src="../../images/logo.png" srcset="/demo1/images/logo2x.png 2x" alt="logo">
-            <img class="logo-dark logo-img logo-img-lg" src="../../images/logo-dark.png" srcset="/demo1/images/logo-dark2x.png 2x" alt="logo-dark">
+        <a href="#" class="logo-link">
+            <img class="logo-light logo-img logo-img-lg" src="{{ asset('assets/images/logo.png') }}" srcset="{{ asset('assets/images/logo.png') }}" alt="logo">
+            <img class="logo-dark logo-img logo-img-lg" src="{{ asset('assets/images/logo.png') }}" srcset="{{ asset('assets/images/logo.png') }}" alt="logo-dark">
         </a>
     </div>
     <div class="nk-block-head">
         <div class="nk-block-head-content">
             <h5 class="nk-block-title">Create account</h5>
             <div class="nk-block-des">
-                <p>Access the DashLite panel using your email and passcode.</p>
+                <p>Access the {{ config('app.name')}} panel using your email and passcode.</p>
             </div>
         </div>
     </div>

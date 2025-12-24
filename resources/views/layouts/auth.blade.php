@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="zxx" class="js">
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
 <head>
     <meta charset="utf-8">
     <meta name="author" content="Softnio">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description"
-        content="A powerful and conceptual apps base dashboard template that especially build for developers and programmers.">
+        content="#">
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}">
     <title>@yield('title') | {{ config('app.name') }}</title>
     <link rel="stylesheet" href="{{ asset('assets/css/dashlitee1e3.css?ver=3.2.4') }}">
@@ -52,7 +52,7 @@
                                     </ul>
                                 </div>
                                 <div class="mt-3">
-                                    <p>&copy; 2024 DashLite. All Rights Reserved.</p>
+                                    <p>&copy; 2025 {{ config('app.name')}}. All Rights Reserved.</p>
                                 </div>
                             </div>
                         </div>
@@ -64,34 +64,37 @@
                                     <div class="slider-item">
                                         <div class="nk-feature nk-feature-center">
                                             <div class="nk-feature-img"><img class="round"
-                                                    src="../../images/slides/promo-a.png"
+                                                    src="{{ asset('assets/images/bus1.jpg') }}"
                                                     srcset="/demo1/images/slides/promo-a2x.png 2x" alt=""></div>
                                             <div class="nk-feature-content py-4 p-sm-5">
-                                                <h4>Dashlite</h4>
-                                                <p>You can start to create your products easily with its user-friendly
-                                                    design & most completed responsive layout.</p>
+                                                <h4>{{ config('app.name')}}</h4>
+                                                <p>
+                                                    Transforming Public
+                                                    Transport in Kigali
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="slider-item">
                                         <div class="nk-feature nk-feature-center">
                                             <div class="nk-feature-img"><img class="round"
-                                                    src="../../images/slides/promo-b.png"
+                                                    src="{{ asset('assets/images/bus2.jpg') }}"
                                                     srcset="/demo1/images/slides/promo-b2x.png 2x" alt=""></div>
                                             <div class="nk-feature-content py-4 p-sm-5">
-                                                <h4>Dashlite</h4>
-                                                <p>You can start to create your products easily with its user-friendly
-                                                    design & most completed responsive layout.</p>
+                                                <h4>{{ config('app.name')}}</h4>
+                                                <p>
+                                                    Smart, green mobility solutions for a sustainable urban future
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="slider-item">
                                         <div class="nk-feature nk-feature-center">
                                             <div class="nk-feature-img"><img class="round"
-                                                    src="../../images/slides/promo-c.png"
+                                                    src="{{ asset('assets/images/slides/promo-c.png') }}"
                                                     srcset="/demo1/images/slides/promo-c2x.png 2x" alt=""></div>
                                             <div class="nk-feature-content py-4 p-sm-5">
-                                                <h4>Dashlite</h4>
+                                                <h4>{{ config('app.name')}}</h4>
                                                 <p>You can start to create your products easily with its user-friendly
                                                     design & most completed responsive layout.</p>
                                             </div>

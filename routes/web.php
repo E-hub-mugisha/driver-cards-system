@@ -106,8 +106,10 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/admin/company-staff/{staff}/reset-password', [CompanyStaffController::class, 'resetPassword'])
         ->name('admin.company.staff.reset-password');
 
+    Route::get('/admin/company/payroll/settings', [CompanyController::class, 'indexPayroll'])
+        ->name('admin.payroll.settings.index');
     // Store new payroll setting
-    Route::post('/admin/company/payroll/settings', [CompanyController::class, 'storePayroll'])
+    Route::post('/admin/payroll/settings', [CompanyController::class, 'storePayroll'])
         ->name('admin.payroll.settings.store');
 
     // Update existing payroll setting
@@ -141,6 +143,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::delete('/drivers/{driver}', [CompanyDriversController::class, 'softDeleteForCompany'])->name('admin.company.drivers.delete');
         Route::post('/drivers/{driver}/restore', [CompanyDriversController::class, 'restoreForCompany'])->name('admin.company.drivers.restore');
     });
+
+    Route::post('/admin/settings', [DashboardController::class, 'index'])
+        ->name('admin.settings.index');
+
+    Route::get('/notifications', [DashboardController::class, 'notification'])->name('notifications.index');
+    Route::get('/notifications/mark-all', [DashboardController::class, 'markAllRead'])->name('notifications.markAllRead');
 });
 
 Route::middleware(['auth', 'user-access:admin'])->prefix('admin')->name('admin.')->group(function () {

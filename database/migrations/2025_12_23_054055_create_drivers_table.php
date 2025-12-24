@@ -23,11 +23,13 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('contract')->nullable();
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
-
+            $table->integer('performance_score')->default(100);
+            $table->string('performance_rating')->default('Good');
             // Company relation
             $table->unsignedBigInteger('company_id')->nullable()->index();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('set null');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
