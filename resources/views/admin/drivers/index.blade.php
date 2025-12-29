@@ -1,106 +1,154 @@
 @extends('layouts.app')
 @section('title','Drivers')
 @section('content')
+
 <div class="container-fluid">
+    <div class="nk-content-inner">
+        <div class="nk-content-body">
+            <div class="nk-block-head nk-block-head-sm">
+                <div class="nk-block-between">
+                    <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">Drivers</h3>
+                    </div>
+                    <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                            <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="pageMenu"><em class="icon ni ni-more-v"></em></a>
+                            <div class="toggle-expand-content" data-content="pageMenu">
+                                <ul class="nk-block-tools g-3">
+                                    <li class="nk-block-tools-opt">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#addDriverModal" class="toggle btn btn-icon btn-primary d-md-none">
+                                            <em class="icon ni ni-plus"></em>
+                                        </a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#addDriverModal" class="toggle btn btn-primary d-none d-md-inline-flex">
+                                            <em class="icon ni ni-plus"></em>
+                                            <span>Add Driver</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
 
-    <div class="d-flex justify-content-between mb-3">
-        <h3>Drivers</h3>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDriverModal">Add Driver</button>
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> Please fix the following issues:
+                    <ul class="mt-2 mb-0">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                <div class="nk-block nk-block-lg">
+                    <div class="nk-block-head">
+                        <div class="nk-block-head-content">
+                            <div class="nk-block-des">
+                                <h5>Active & Inactive Drivers</h5>
+                                <table class="datatable-init nowrap nk-tb-list nk-tb-ulist">
+                                    <thead>
+                                        <tr class="nk-tb-item nk-tb-head">
+                                            <th class="nk-tb-col">#</th>
+                                            <th class="nk-tb-col">Photo</th>
+                                            <th class="nk-tb-col">Name</th>
+                                            <th class="nk-tb-col">ID</th>
+                                            <th class="nk-tb-col">License</th>
+                                            <th class="nk-tb-col">Phone</th>
+                                            <th class="nk-tb-col">Company</th>
+                                            <th class="nk-tb-col">Status</th>
+                                            <th class="nk-tb-col nk-tb-col-tools text-end"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($drivers as $driver)
+                                        @if(!$driver->trashed())
+                                        <tr class="nk-tb-item">
+                                            <td class="nk-tb-col">{{ $loop->iteration }}</td>
+                                            <td class="nk-tb-col">
+                                                @if($driver->photo)
+                                                <img src="{{ asset('storage/'.$driver->photo) }}" width="50">
+                                                @endif
+                                            </td>
+                                            <td class="nk-tb-col">{{ $driver->names }}</td>
+                                            <td class="nk-tb-col">{{ $driver->ID_number }}</td>
+                                            <td class="nk-tb-col">{{ $driver->driver_license }}</td>
+                                            <td class="nk-tb-col">{{ $driver->phone }}</td>
+                                            <td class="nk-tb-col">{{ $driver->company?->name ?? '-' }}</td>
+                                            <td class="nk-tb-col">{{ ucfirst($driver->status) }}</td>
+                                            <td class="nk-tb-col nk-tb-col-tools">
+                                                <ul class="nk-tb-actions gx-1">
+                                                    <li>
+                                                        <div class="drodown"><a href="#"
+                                                                class="dropdown-toggle btn btn-icon btn-trigger"
+                                                                data-bs-toggle="dropdown"><em
+                                                                    class="icon ni ni-more-h"></em></a>
+                                                            <div
+                                                                class="dropdown-menu dropdown-menu-end">
+                                                                <ul class="link-list-opt no-bdr">
+                                                                    <li>
+                                                                        <a href="{{ route('admin.drivers.show', $driver->id )}}" class="text-info">View Details</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a role="button" class="text-warning" data-bs-toggle="modal" data-bs-target="#editDriverModal{{ $driver->id }}">Edit</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a role="button" class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteDriverModal{{ $driver->id }}">Remove</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- Deleted Drivers --}}
+                <h5 class="mt-5">Deleted Drivers</h5>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>ID</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($drivers->whereNotNull('deleted_at') as $driver)
+                        <tr class="table-warning">
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $driver->names }}</td>
+                            <td>{{ $driver->ID_number }}</td>
+                            <td>{{ $driver->company?->name ?? '-' }}</td>
+                            <td>{{ ucfirst($driver->status) }}</td>
+                            <td>
+                                <a href="{{ route('admin.drivers.show', $driver->id ) }}" class="btn btn-info">View Details</a>
+                                <form action="{{ route('admin.drivers.restore',$driver->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button class="btn btn-success btn-sm">Restore</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <strong>Whoops!</strong> Please fix the following issues:
-        <ul class="mt-2 mb-0">
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
-
-    {{-- Active Drivers --}}
-    <h5>Active & Inactive Drivers</h5>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Photo</th>
-                <th>Name</th>
-                <th>ID</th>
-                <th>License</th>
-                <th>Phone</th>
-                <th>Company</th>
-                <th>Status</th>
-                <th width="300">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($drivers as $driver)
-            @if(!$driver->trashed())
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>
-                    @if($driver->photo)
-                    <img src="{{ asset('storage/'.$driver->photo) }}" width="50">
-                    @endif
-                </td>
-                <td>{{ $driver->names }}</td>
-                <td>{{ $driver->ID_number }}</td>
-                <td>{{ $driver->driver_license }}</td>
-                <td>{{ $driver->phone }}</td>
-                <td>{{ $driver->company?->name ?? '-' }}</td>
-                <td>{{ ucfirst($driver->status) }}</td>
-                <td>
-                    <a href="{{ route('admin.drivers.show', $driver->id )}}" class="btn btn-info">View Details</a>
-                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editDriverModal{{ $driver->id }}">Edit</button>
-                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDriverModal{{ $driver->id }}">Remove</button>
-                </td>
-            </tr>
-            @endif
-            @endforeach
-        </tbody>
-    </table>
-
-    {{-- Deleted Drivers --}}
-    <h5 class="mt-5">Deleted Drivers</h5>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>ID</th>
-                <th>Company</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($drivers->whereNotNull('deleted_at') as $driver)
-            <tr class="table-warning">
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $driver->names }}</td>
-                <td>{{ $driver->ID_number }}</td>
-                <td>{{ $driver->company?->name ?? '-' }}</td>
-                <td>{{ ucfirst($driver->status) }}</td>
-                <td>
-                    <a href="{{ route('admin.drivers.show', $driver->id ) }}" class="btn btn-info">View Details</a>
-                    <form action="{{ route('admin.drivers.restore',$driver->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        <button class="btn btn-success btn-sm">Restore</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
 </div>
-
 {{-- Add Driver Modal --}}
 <div class="modal fade" id="addDriverModal">
     <div class="modal-dialog modal-lg">
