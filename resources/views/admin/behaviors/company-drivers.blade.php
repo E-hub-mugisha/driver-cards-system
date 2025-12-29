@@ -39,7 +39,7 @@
                 <h5 class="mb-3">Company: {{ $selectedCompany->name }}</h5>
 
                 <table class="table table-bordered mt-2">
-                    <thead class="table-dark">
+                    <thead>
                         <tr>
                             <th>#</th>
                             <th>Driver</th>
