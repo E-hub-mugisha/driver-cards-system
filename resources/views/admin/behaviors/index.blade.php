@@ -56,25 +56,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card rounded-5 shadow-sm">
                         <div class="card-body">
 
                             <div class="row">
 
                                 <!-- LEFT: CATEGORY MENU -->
                                 <div class="col-md-3">
-                                    <ul class="nav link-list-menu border border-light round m-0" role="tablist">
+                                    <ul class="nav link-list-menu round-5 shadow-sm" role="tablist">
                                         @foreach($categories as $index=>$category)
-                                        <li>
+                                        <li class="p-4">
+                                            <span class="badge bg-secondary">
+                                                {{ $category->behaviorTypes->count() }}
+                                            </span>
                                             <a class="nav-link {{ $index==0?'active':'' }}"
                                                 data-bs-toggle="tab"
                                                 href="#tabItem-{{ $category->id }}">
-                                                <span class="badge bg-secondary">
-                                                    {{ $category->behaviorTypes->count() }}
-                                                </span>
+
                                                 {{ $category->name }}
 
                                             </a>
+
                                         </li>
                                         @endforeach
                                     </ul>
@@ -181,56 +183,6 @@
                                                         </td>
                                                     </tr>
 
-                                                    <!-- EDIT MODAL -->
-                                                    <div class="modal fade"
-                                                        id="editBehaviorModal-{{ $behavior->id }}">
-                                                        <div class="modal-dialog">
-                                                            <form method="POST"
-                                                                action="{{ route('admin.behaviors.update',$behavior) }}"
-                                                                class="modal-content">
-                                                                @csrf
-                                                                @method('PUT')
-
-                                                                <div class="modal-header">
-                                                                    <h5>Edit Behavior</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                                </div>
-
-                                                                <div class="modal-body">
-
-                                                                    <input name="name"
-                                                                        value="{{ $behavior->name }}"
-                                                                        class="form-control mb-2"
-                                                                        required>
-
-                                                                    <select name="category" class="form-control mb-2">
-                                                                        <option value="negative" @selected($behavior->category=='negative')>
-                                                                            Negative
-                                                                        </option>
-                                                                        <option value="positive" @selected($behavior->category=='positive')>
-                                                                            Positive
-                                                                        </option>
-                                                                    </select>
-
-                                                                    <select name="severity" class="form-control mb-2">
-                                                                        <option value="low" @selected($behavior->severity=='low')>Low</option>
-                                                                        <option value="medium" @selected($behavior->severity=='medium')>Medium</option>
-                                                                        <option value="high" @selected($behavior->severity=='high')>High</option>
-                                                                    </select>
-
-                                                                    <input type="number"
-                                                                        name="default_score"
-                                                                        value="{{ $behavior->default_score }}"
-                                                                        class="form-control">
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-primary">Update</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-
                                                     @empty
                                                     <tr>
                                                         <td colspan="5" class="text-center text-muted">
@@ -257,6 +209,61 @@
     </div>
 </div>
 
+@foreach($categories as $index=>$category)
+@forelse($category->behaviorTypes as $behavior)
+
+<!-- EDIT MODAL -->
+<div class="modal fade"
+    id="editBehaviorModal-{{ $behavior->id }}">
+    <div class="modal-dialog">
+        <form method="POST"
+            action="{{ route('admin.behaviors.update',$behavior) }}"
+            class="modal-content">
+            @csrf
+            @method('PUT')
+
+            <div class="modal-header">
+                <h5>Edit Behavior</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input name="name"
+                    value="{{ $behavior->name }}"
+                    class="form-control mb-2"
+                    required>
+
+                <select name="category" class="form-control mb-2">
+                    <option value="negative" @selected($behavior->category=='negative')>
+                        Negative
+                    </option>
+                    <option value="positive" @selected($behavior->category=='positive')>
+                        Positive
+                    </option>
+                </select>
+
+                <select name="severity" class="form-control mb-2">
+                    <option value="low" @selected($behavior->severity=='low')>Low</option>
+                    <option value="medium" @selected($behavior->severity=='medium')>Medium</option>
+                    <option value="high" @selected($behavior->severity=='high')>High</option>
+                </select>
+
+                <input type="number"
+                    name="default_score"
+                    value="{{ $behavior->default_score }}"
+                    class="form-control">
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+@empty
+@endforelse
+@endforeach
 <!-- ADD MODAL -->
 <div class="modal fade" id="addBehaviorModal">
     <div class="modal-dialog">

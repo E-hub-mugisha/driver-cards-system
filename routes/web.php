@@ -164,6 +164,11 @@ Route::middleware(['auth', 'user-access:admin'])->prefix('admin')->name('admin.'
 
 Route::prefix('reports')->middleware(['auth'])->group(function () {
     Route::get('/', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/admin/reports/export/pdf', [ReportController::class, 'exportPdf'])
+        ->name('admin.reports.export.pdf');
+
+    Route::get('/admin/reports/export/excel', [ReportController::class, 'exportExcel'])
+        ->name('admin.reports.export.excel');
 
     Route::get('/drivers', [ReportController::class, 'driverReports'])->name('reports.drivers');
     Route::get('/behaviors', [ReportController::class, 'behaviorReports'])->name('reports.behaviors');
@@ -174,13 +179,12 @@ Route::prefix('admin/payroll')->name('admin.payroll.')->group(function () {
 
     Route::get('/', [PayrollProcessingController::class, 'index'])->name('index');
 
-    Route::post('/process', [PayrollProcessingController::class, 'process'])
-        ->name('process');
+    Route::get('preview', [PayrollProcessingController::class, 'preview'])->name('preview');
+    Route::post('process', [PayrollProcessingController::class, 'process'])->name('process');
+    Route::get('review', [PayrollProcessingController::class, 'review'])->name('review');
 
-    Route::post('/approve/{payroll}', [PayrollProcessingController::class, 'approve'])
-        ->name('approve');
-    Route::post('/reject/{payroll}', [PayrollProcessingController::class, 'reject'])
-        ->name('reject');
+    Route::post('{payroll}/approve', [PayrollProcessingController::class, 'approve'])->name('approve');
+    Route::get('driver/{detail}/download', [PayrollProcessingController::class, 'downloadDriverPayslip'])->name('download.driver');
 });
 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\Driver;
+use App\Models\DriverBehavior;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -41,6 +42,15 @@ class DashboardController extends Controller
         $companyChange = $companiesPrev7
             ? (($companiesLast7 - $companiesPrev7) / $companiesPrev7) * 100
             : 0;
+
+        $reportedDrivers = DriverBehavior::with([
+            'driver',
+            'behaviorType.behaviorCategory'
+        ])
+            ->latest('behavior_date')
+            ->limit(5)
+            ->get();
+
         return view('admin.dashboard.index', compact(
             'users',
             'companies',
@@ -54,7 +64,8 @@ class DashboardController extends Controller
             'suspendedDrivers',
             'pendingDrivers',
             'avgCompaniesPerDay',
-            'companyChange'
+            'companyChange',
+            'reportedDrivers'
         ));
     }
 }

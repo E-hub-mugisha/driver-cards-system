@@ -82,11 +82,10 @@
                             <span class="nk-menu-text">Payroll Processing</span>
                         </a>
                     </li>
-
                     <li class="nk-menu-item">
-                        <a href="{{ route('admin.payroll.settings.index')}}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-setting-alt"></em></span>
-                            <span class="nk-menu-text">Payroll Settings</span>
+                        <a href="#" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-history"></em></span>
+                            <span class="nk-menu-text">Payroll History</span>
                         </a>
                     </li>
 

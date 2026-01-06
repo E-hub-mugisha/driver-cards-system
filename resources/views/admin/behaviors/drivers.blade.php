@@ -2,64 +2,70 @@
 @section('title', 'Drivers with behavior')
 @section('content')
 
-<div class="container">
-    <div class="az-content-body pd-lg-l-40 d-flex flex-column">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="container-fluid">
+    <div class="nk-content-inner">
+        <div class="nk-content-body">
+            <div class="nk-block-head nk-block-head-sm">
+                <div class="nk-block-between">
+                    <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">Drivers with behavior:
+                            <span class="badge bg-primary">{{ $behavior->name }}</span>
+                        </h3>
+                    </div>
+                    <div class="nk-block-head-content">
+                        <div class="toggle-wrap nk-block-tools-toggle">
+                            <a href="{{ route('admin.behaviors.index') }}" class="btn btn-secondary rounded-5">
+                                <em class="icon ni ni-arrow-left"></em> Back to Behaviors
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- TITLE -->
-            <h2 class="az-content-title mb-0">Drivers with behavior:
-                <span class="badge bg-primary">{{ $behavior->name }}</span>
-            </h2>
-            <div class="d-flex gap-2">
-                <a href="{{ route('admin.behaviors.index') }}" class="btn btn-secondary">
-                    ← Back to Behaviors
-                </a>
-            </div>
-        </div>
-
-        <div class="card mt-4 shadow-sm py-3 px-4">
-            <div class="card-header mb-3">
-                Total Drivers: {{ $drivers->total() }}
-            </div>
-
-            <table class="table" id="example2">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Driver</th>
-                        <th>Reported On</th>
-                        <th>Severity</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($drivers as $row)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $row->driver->names }}</td>
-                        <td>{{ $row->created_at?->format('d M Y') }}</td>
-                        <td>
-                            <span class="badge
-                        @if($row->severity === 'low') bg-info
-                        @elseif($row->severity === 'medium') bg-warning
-                        @else bg-danger @endif">
-                                {{ ucfirst($row->severity) }}
-                            </span>
-                        </td>
-                        <td>{{ $row->score }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">
-                            No drivers found for this behavior
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-
-            <div class="p-2">
-                {{ $drivers->links() }}
+                <div class="nk-block nk-block-lg p-4 bg-white rounded-5 mt-5">
+                    <div class="nk-block-head">
+                        <div class="nk-block-head-content">
+                            <div class="nk-block-des">
+                                <h5>Total Drivers: {{ $drivers->total() }}</h5>
+                                <table class="datatable-init nowrap nk-tb-list nk-tb-ulist">
+                                    <thead>
+                                        <tr class="nk-tb-item nk-tb-head">
+                                            <th class="nk-tb-col">#</th>
+                                            <th class="nk-tb-col">Driver</th>
+                                            <th class="nk-tb-col">License</th>
+                                            <th class="nk-tb-col">Company</th>
+                                            <th class="nk-tb-col">Reported On</th>
+                                            <th class="nk-tb-col">Severity</th>
+                                            <th class="nk-tb-col">Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($drivers as $row)
+                                        <tr class="nk-tb-item">
+                                            <td class="nk-tb-col">{{ $loop->iteration }}</td>
+                                            <td class="nk-tb-col">{{ $row->driver->names }}</td>
+                                            <td class="nk-tb-col">{{ $row->driver->driver_license }}</td>
+                                            <td class="nk-tb-col">{{ $row->driver->company->name }}</td>
+                                            <td class="nk-tb-col">{{ $row->created_at?->format('d M Y') }}</td>
+                                            <td class="nk-tb-col">
+                                                <span class="@if($row->severity === 'low') text-info @elseif($row->severity === 'medium') text-warning                        @else text-danger @endif">
+                                                    <em class="icon ni ni-alert"></em> {{ ucfirst($row->severity) }}
+                                                </span>
+                                            </td>
+                                            <td class="nk-tb-col">{{ $row->score }}</td>
+                                        </tr>
+                                        @empty
+                                        <tr class="nk-tb-item">
+                                            <td colspan="5" class="text-center text-muted">
+                                                No drivers found for this behavior
+                                            </td>
+                                        </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

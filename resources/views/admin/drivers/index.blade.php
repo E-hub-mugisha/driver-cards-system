@@ -44,7 +44,7 @@
                 </div>
                 @endif
 
-                <div class="nk-block nk-block-lg">
+                <div class="nk-block nk-block-lg p-4 bg-white rounded-5 mt-5">
                     <div class="nk-block-head">
                         <div class="nk-block-head-content">
                             <div class="nk-block-des">
@@ -114,37 +114,73 @@
                     </div>
                 </div>
                 {{-- Deleted Drivers --}}
-                <h5 class="mt-5">Deleted Drivers</h5>
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>ID</th>
-                            <th>Company</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($drivers->whereNotNull('deleted_at') as $driver)
-                        <tr class="table-warning">
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $driver->names }}</td>
-                            <td>{{ $driver->ID_number }}</td>
-                            <td>{{ $driver->company?->name ?? '-' }}</td>
-                            <td>{{ ucfirst($driver->status) }}</td>
-                            <td>
-                                <a href="{{ route('admin.drivers.show', $driver->id ) }}" class="btn btn-info">View Details</a>
-                                <form action="{{ route('admin.drivers.restore',$driver->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button class="btn btn-success btn-sm">Restore</button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="nk-block nk-block-lg p-4 bg-white rounded-5 mt-5">
+                    <div class="nk-block-head">
+                        <div class="nk-block-head-content">
+                            <div class="nk-block-des">
+                                <h5>Deleted Drivers</h5>
+                                <table class="datatable-init nowrap nk-tb-list nk-tb-ulist">
+                                    <thead>
+                                        <tr class="nk-tb-item nk-tb-head">
+                                            <th class="nk-tb-col">#</th>
+                                            <th class="nk-tb-col">Photo</th>
+                                            <th class="nk-tb-col">Name</th>
+                                            <th class="nk-tb-col">ID</th>
+                                            <th class="nk-tb-col">License</th>
+                                            <th class="nk-tb-col">Phone</th>
+                                            <th class="nk-tb-col">Company</th>
+                                            <th class="nk-tb-col">Status</th>
+                                            <th class="nk-tb-col nk-tb-col-tools text-end"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($drivers->whereNotNull('deleted_at') as $driver)
+                                        <tr class="nk-tb-item">
+                                            <td class="nk-tb-col">{{ $loop->iteration }}</td>
+                                            <td class="nk-tb-col">
+                                                @if($driver->photo)
+                                                <img src="{{ asset('storage/'.$driver->photo) }}" width="50">
+                                                @endif
+                                            </td>
+                                            <td class="nk-tb-col">{{ $driver->names }}</td>
+                                            <td class="nk-tb-col">{{ $driver->ID_number }}</td>
+                                            <td class="nk-tb-col">{{ $driver->driver_license }}</td>
+                                            <td class="nk-tb-col">{{ $driver->phone }}</td>
+                                            <td class="nk-tb-col">{{ $driver->company?->name ?? '-' }}</td>
+                                            <td class="nk-tb-col">{{ ucfirst($driver->status) }}</td>
+                                            <td class="nk-tb-col nk-tb-col-tools">
+                                                <ul class="nk-tb-actions gx-1">
+                                                    <li>
+                                                        <div class="drodown"><a href="#"
+                                                                class="dropdown-toggle btn btn-icon btn-trigger"
+                                                                data-bs-toggle="dropdown"><em
+                                                                    class="icon ni ni-more-h"></em></a>
+                                                            <div
+                                                                class="dropdown-menu dropdown-menu-end">
+                                                                <ul class="link-list-opt no-bdr">
+                                                                    <li>
+                                                                        <a href="{{ route('admin.drivers.show', $driver->id )}}" class="text-info">View Details</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <form action="{{ route('admin.drivers.restore',$driver->id) }}" method="POST" class="d-inline">
+                                                                            @csrf
+                                                                            <button class="btn btn-success btn-sm">Restore</button>
+                                                                        </form>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

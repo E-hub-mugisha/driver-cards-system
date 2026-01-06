@@ -7,7 +7,7 @@
     <div class="nk-content-inner">
         <div class="nk-content-body">
             <div class="nk-block-head nk-block-head-sm">
-                <div class="nk-block-between">
+                <div class="nk-block-between mb-3">
                     <div class="nk-block-head-content">
                         <h3 class="nk-block-title page-title">@yield('title')</h3>
                     </div>
@@ -17,20 +17,12 @@
                                 data-target="pageMenu"><em class="icon ni ni-more-v"></em></a>
                             <div class="toggle-expand-content" data-content="pageMenu">
                                 <ul class="nk-block-tools g-3">
-                                    <li>
-                                        <div class="form-control-wrap">
-                                            <div class="form-icon form-icon-right"><em
-                                                    class="icon ni ni-search"></em></div><input
-                                                type="text" class="form-control" id="default-04"
-                                                placeholder="Quick search by id">
-                                        </div>
-                                    </li>
                                     <li class="nk-block-tools-opt"><a href="#"
                                             data-target="addProduct"
-                                            class="toggle btn btn-icon btn-primary d-md-none"><em
+                                            class="toggle btn btn-icon rounded-5 d-md-none" style="background-color: #00ADEE; color: #fff"><em
                                                 class="icon ni ni-plus"></em></a><a href="#"
                                             data-target="addProduct"
-                                            class="toggle btn btn-primary d-none d-md-inline-flex"><em
+                                            class="toggle btn rounded-5 d-none d-md-inline-flex" style="background-color: #00ADEE; color: #fff"><em
                                                 class="icon ni ni-plus"></em><span>Add
                                                 User</span></a></li>
                                 </ul>
@@ -50,7 +42,7 @@
                 </div>
                 @endif
 
-                <div class="nk-block nk-block-lg">
+                <div class="nk-block nk-block-lg bg-white rounded-5 shadow-sm p-4">
                     <div class="nk-block-head">
                         <div class="nk-block-head-content">
                             <div class="nk-block-des">
@@ -81,7 +73,7 @@
                                 <td>
                                     <div class="user-card">
                                         <div class="user-avatar bg-dim-primary d-none d-sm-flex">
-                                            <span>AB</span>
+                                            <span>{{ substr($user->name, 0, 2) }}</span>
                                         </div>
                                         <div class="user-info">
                                             <span class="tb-lead">

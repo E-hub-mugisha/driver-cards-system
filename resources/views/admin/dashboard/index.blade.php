@@ -40,7 +40,7 @@
                                         </div>
                                     </li>
                                     <li class="nk-block-tools-opt"><a href="#"
-                                            class="btn btn-primary"><em
+                                            class="btn rounded-5" style="background:#00ADEE; color:#fff"><em
                                                 class="icon ni ni-reports"></em><span>Reports</span></a>
                                     </li>
                                 </ul>
@@ -54,12 +54,12 @@
                     <div class="col-xxl-12">
                         <div class="row g-gs">
                             <div class="col-md-4">
-                                <div class="card card-bordered">
+                                <div class="card rounded-5 card-gradient" style="background: linear-gradient(135deg, #00ADEE, #E3B228); color: #fff;">
                                     <div class="card-inner">
                                         <div class="card-title-group align-start mb-2">
                                             <div class="card-title">
-                                                <h6 class="title">Total Drivers</h6>
-                                                <p>Driver statistics overview</p>
+                                                <h6 class="title text-white">Total Drivers</h6>
+                                                <p class="mb-0 text-white">Driver statistics overview</p>
                                             </div>
 
                                             <div class="card-tools">
@@ -71,6 +71,8 @@
                                         </div>
 
                                         <div class="align-end gy-3 gx-5 flex-wrap flex-md-nowrap flex-lg-wrap flex-xxl-nowrap">
+
+                                            {{-- KPI DATA --}}
                                             <div class="nk-sale-data-group flex-md-nowrap g-4">
 
                                                 <div class="nk-sale-data">
@@ -81,7 +83,7 @@
                                                             {{ number_format($MonthChange,2) }}%
                                                         </span>
                                                     </span>
-                                                    <span class="sub-title">Last 30 Days</span>
+                                                    <span class="sub-title text-white">Last 30 Days</span>
                                                 </div>
 
                                                 <div class="nk-sale-data">
@@ -92,20 +94,17 @@
                                                             {{ number_format($WeekChange,2) }}%
                                                         </span>
                                                     </span>
-                                                    <span class="sub-title">This Week</span>
+                                                    <span class="sub-title text-white">This Week</span>
                                                 </div>
                                             </div>
 
-                                            <div class="nk-sales-ck sales-revenue">
-                                                <canvas class="sales-bar-chart" id="driversChart"></canvas>
-                                            </div>
                                         </div>
-
                                     </div>
                                 </div>
+
                             </div>
                             <div class="col-md-4">
-                                <div class="card card-bordered">
+                                <div class="card rounded-5" style="background: linear-gradient(135deg, #ffffffff, #E3B228);">
                                     <div class="card-inner">
                                         <div class="card-title-group align-start mb-2">
                                             <div class="card-title">
@@ -138,20 +137,17 @@
                                                 <span class="sub-title">Suspended Drivers</span>
                                             </div>
 
-                                            <div class="nk-sales-ck">
-                                                <canvas class="sales-bar-chart" id="driversStatusChart"></canvas>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="card card-bordered">
+                                <div class="card rounded-5" style="background: linear-gradient(135deg, #00ADEE, #ffffffff);">
                                     <div class="card-inner">
                                         <div class="card-title-group align-start mb-2">
                                             <div class="card-title">
-                                                <h6 class="title">Avg Registered Companies</h6>
+                                                <h6 class="text-white">Avg Registered Companies</h6>
+                                                <p class="text-white">Companies registration overview</p>
                                             </div>
 
                                             <div class="card-tools">
@@ -176,10 +172,6 @@
                                                     since last week
                                                 </span>
                                             </div>
-
-                                            <div class="nk-sales-ck">
-                                                <canvas class="sales-bar-chart" id="companyStatsChart"></canvas>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -187,7 +179,7 @@
                         </div>
                     </div>
                     <div class="col-xxl-8">
-                        <div class="card card-bordered card-full">
+                        <div class="card rounded-5 card-full">
                             <div class="card-inner">
                                 <div class="card-title-group">
                                     <div class="card-title">
@@ -262,63 +254,58 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-xxl-4">
-                        <div class="card card-bordered card-full">
+                        <div class="card rounded-5 card-full">
                             <div class="card-inner border-bottom">
                                 <div class="card-title-group">
                                     <div class="card-title">
-                                        <h6 class="title">Recent Activities</h6>
+                                        <h6 class="title">Recent Reported Drivers</h6>
                                     </div>
                                     <div class="card-tools">
                                         <ul class="card-tools-nav">
-                                            <li><a href="#"><span>Cancel</span></a></li>
                                             <li class="active"><a href="#"><span>All</span></a></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <ul class="nk-activity">
+                                @forelse($reportedDrivers as $report)
                                 <li class="nk-activity-item">
-                                    <div class="nk-activity-media user-avatar bg-success"><img
-                                            src="images/avatar/c-sm.jpg" alt=""></div>
+                                    <div class="nk-activity-media user-avatar bg-danger">
+                                        <span>
+                                            {{ strtoupper(substr($report->driver->names ?? 'N', 0, 1)) }}
+                                        </span>
+                                    </div>
+
                                     <div class="nk-activity-data">
-                                        <div class="label">Keith Jensen requested to Widthdrawl.
-                                        </div><span class="time">2 hours ago</span>
+                                        <div class="label">
+                                            <strong>{{ $report->driver->names ?? 'Unknown Driver' }}</strong>
+                                            was reported for
+                                            <span class="text-danger">
+                                                {{
+                        $report->behaviorType->behaviorCategory->name 
+                        ?? 'Uncategorized Behavior' 
+                    }}
+                                            </span>
+                                        </div>
+
+                                        <span class="time">
+                                            {{ $report->behavior_date?->diffForHumans() ?? $report->created_at->diffForHumans() }}
+                                        </span>
                                     </div>
                                 </li>
+                                @empty
                                 <li class="nk-activity-item">
-                                    <div class="nk-activity-media user-avatar bg-warning">HS</div>
                                     <div class="nk-activity-data">
-                                        <div class="label">Harry Simpson placed a Order.</div><span
-                                            class="time">2 hours ago</span>
+                                        <div class="label text-muted">No recent behavior reports</div>
                                     </div>
                                 </li>
-                                <li class="nk-activity-item">
-                                    <div class="nk-activity-media user-avatar bg-azure">SM</div>
-                                    <div class="nk-activity-data">
-                                        <div class="label">Stephanie Marshall got a huge bonus.
-                                        </div><span class="time">2 hours ago</span>
-                                    </div>
-                                </li>
-                                <li class="nk-activity-item">
-                                    <div class="nk-activity-media user-avatar bg-purple"><img
-                                            src="images/avatar/d-sm.jpg" alt=""></div>
-                                    <div class="nk-activity-data">
-                                        <div class="label">Nicholas Carr deposited funds.</div><span
-                                            class="time">2 hours ago</span>
-                                    </div>
-                                </li>
-                                <li class="nk-activity-item">
-                                    <div class="nk-activity-media user-avatar bg-pink">TM</div>
-                                    <div class="nk-activity-data">
-                                        <div class="label">Timothy Moreno placed a Order.</div><span
-                                            class="time">2 hours ago</span>
-                                    </div>
-                                </li>
+                                @endforelse
                             </ul>
+
                         </div>
                     </div>
                     <div class="col-md-6 col-xxl-4">
-                        <div class="card card-bordered card-full">
+                        <div class="card rounded-5 card-full">
                             <div class="card-inner-group">
                                 <div class="card-inner">
                                     <div class="card-title-group">
@@ -394,7 +381,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-xxl-4">
-                        <div class="card card-bordered h-100">
+                        <div class="card rounded-5 h-100">
                             <div class="card-inner border-bottom">
                                 <div class="card-title-group">
                                     <div class="card-title">
@@ -428,7 +415,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-xxl-4">
-                        <div class="card card-bordered h-100">
+                        <div class="card rounded-5 h-100">
                             <div class="card-inner border-bottom">
                                 <div class="card-title-group">
                                     <div class="card-title">

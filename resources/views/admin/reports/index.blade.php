@@ -7,176 +7,153 @@
 
     <h3 class="mb-3">📊 Reporting & Analytics Dashboard</h3>
 
+    <!-- ================= FILTERS ================= -->
+    <form method="GET" action="{{ route('reports.index') }}" class="card shadow-sm rounded-5 mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+
+                <!-- Company -->
+                <div class="col-md-3">
+                    <label class="fw-bold">Company</label>
+                    <select name="company_id" class="form-select rounded-5">
+                        <option value="">All Companies</option>
+                        @foreach($companies as $company)
+                            <option value="{{ $company->id }}"
+                                {{ request('company_id') == $company->id ? 'selected' : '' }}>
+                                {{ $company->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Start Date -->
+                <div class="col-md-2">
+                    <label class="fw-bold">From</label>
+                    <input type="date" name="from" class="form-control rounded-5"
+                           value="{{ request('from') }}">
+                </div>
+
+                <!-- End Date -->
+                <div class="col-md-2">
+                    <label class="fw-bold">To</label>
+                    <input type="date" name="to" class="form-control rounded-5"
+                           value="{{ request('to') }}">
+                </div>
+
+                <!-- Buttons -->
+                <div class="col-md-5 text-end">
+                    <button class="btn btn-primary rounded-5">
+                        <i class="ti ti-filter"></i> Apply Filter
+                    </button>
+                    <a href="{{ route('reports.index') }}" class="btn btn-secondary rounded-5">
+                        <i class="ti ti-arrows-cross"></i> Reset
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
     <!-- ================= KPI CARDS ================= -->
     <div class="row">
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-left-primary">
-                <div class="card-body">
-                    <h6>Total Drivers</h6>
-                    <h3 class="fw-bold">{{ $totalDrivers ?? 0 }}</h3>
-                </div>
-            </div>
-        </div>
+        @php
+            $cards = [
+                ['title'=>'Total Drivers','value'=>$totalDrivers,'color'=>'primary'],
+                ['title'=>'Avg Performance','value'=>round($avgScore,1),'color'=>'success'],
+                ['title'=>'Total Incidents','value'=>$totalIncidents,'color'=>'danger'],
+                ['title'=>'High Risk Drivers','value'=>$highRiskDrivers,'color'=>'warning'],
+            ];
+        @endphp
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-left-success">
+        @foreach($cards as $card)
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm bg-{{ $card['color'] }} text-white rounded-5">
                 <div class="card-body">
-                    <h6>Average Performance Score</h6>
-                    <h3 class="fw-bold">{{ round($avgScore ?? 0,1) }}</h3>
+                    <h6 class="text-white">{{ $card['title'] }}</h6>
+                    <h3 class="fw-bold">{{ $card['value'] }}</h3>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-left-danger">
-                <div class="card-body">
-                    <h6>Total Incidents</h6>
-                    <h3 class="fw-bold">{{ $totalIncidents ?? 0 }}</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-left-warning">
-                <div class="card-body">
-                    <h6>High Risk Drivers</h6>
-                    <h3 class="fw-bold">{{ $highRiskDrivers ?? 0 }}</h3>
-                </div>
-            </div>
-        </div>
+        @endforeach
 
     </div>
 
     <hr>
 
-    <!-- ================= CHART ROW 1 ================= -->
-    <div class="row mt-3">
-
-        <!-- Monthly Incidents -->
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header fw-bold">Monthly Incident Trend</div>
+    <!-- ================= CHARTS ================= -->
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm rounded-5">
+                <div class="card-header bg-white fw-bold">Monthly Incident Trend</div>
                 <div class="card-body">
-                    <canvas id="monthlyIncidentsChart" height="120"></canvas>
+                    <canvas id="monthlyIncidentsChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Behavior Severity -->
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header fw-bold">Behavior Severity Distribution</div>
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm rounded-5">
+                <div class="card-header bg-white fw-bold">Behavior Severity</div>
                 <div class="card-body">
-                    <canvas id="behaviorSeverityChart" height="120"></canvas>
+                    <canvas id="behaviorSeverityChart"></canvas>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- ================= CHART ROW 2 ================= -->
-    <div class="row mt-3">
-
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header fw-bold">Incident Status Breakdown</div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm rounded-5">
+                <div class="card-header bg-white fw-bold">Incident Status</div>
                 <div class="card-body">
-                    <canvas id="incidentStatusChart" height="120"></canvas>
+                    <canvas id="incidentStatusChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header fw-bold">Responsibility Allocation</div>
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm rounded-5">
+                <div class="card-header bg-white fw-bold">Responsibility</div>
                 <div class="card-body">
-                    <canvas id="responsibilityChart" height="120"></canvas>
+                    <canvas id="responsibilityChart"></canvas>
                 </div>
             </div>
         </div>
-
     </div>
 
 </div>
-@endsection
 
 
-@section('scripts')
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // ================= DATA FROM CONTROLLER =================
-    const monthlyLabels = @json($monthlyIncidents->pluck('month') ?? []);
-    const monthlyCounts = @json($monthlyIncidents->pluck('total') ?? []);
+const monthlyLabels = @json($monthlyIncidents->pluck('month'));
+const monthlyCounts = @json($monthlyIncidents->pluck('total'));
+const severityLabels = @json($behaviorStats->pluck('severity'));
+const severityCounts = @json($behaviorStats->pluck('total'));
+const incidentStatus = @json($incidentStatus);
+const responsibility = @json($responsibilityStats);
 
-    const severityLabels = @json($behaviorStats->pluck('severity') ?? []);
-    const severityCounts = @json($behaviorStats->pluck('total') ?? []);
+new Chart(monthlyIncidentsChart, {
+    type: 'line',
+    data: { labels: monthlyLabels, datasets: [{ data: monthlyCounts, label: 'Incidents', borderWidth: 3 }] }
+});
 
-    const incidentStatus = @json($incidentStatus ?? ['open'=>0,'closed'=>0,'pending'=>0]);
-    const responsibilityData = @json($responsibilityStats ?? [
-        'driver' => 0,
-        'company' => 0,
-        'third_party' => 0
-    ]);
+new Chart(behaviorSeverityChart, {
+    type: 'bar',
+    data: { labels: severityLabels, datasets: [{ data: severityCounts, label: 'Count' }] }
+});
 
-    // ================= MONTHLY INCIDENTS =================
-    new Chart(document.getElementById('monthlyIncidentsChart'), {
-        type: 'line',
-        data: {
-            labels: monthlyLabels,
-            datasets: [{
-                label: 'Incidents',
-                data: monthlyCounts,
-                borderWidth: 3,
-                fill: false,
-                tension: .3
-            }]
-        }
-    });
+new Chart(incidentStatusChart, {
+    type: 'pie',
+    data: { labels: ['Open','Closed','Pending'], datasets: [{ data: Object.values(incidentStatus) }] }
+});
 
-    // ================= BEHAVIOR SEVERITY =================
-    new Chart(document.getElementById('behaviorSeverityChart'), {
-        type: 'bar',
-        data: {
-            labels: severityLabels,
-            datasets: [{
-                label: 'Count',
-                data: severityCounts,
-                borderWidth: 1
-            }]
-        }
-    });
-
-    // ================= INCIDENT STATUS =================
-    new Chart(document.getElementById('incidentStatusChart'), {
-        type: 'pie',
-        data: {
-            labels: ['Open','Closed','Pending'],
-            datasets: [{
-                data: [
-                    incidentStatus.open ?? 0,
-                    incidentStatus.closed ?? 0,
-                    incidentStatus.pending ?? 0
-                ]
-            }]
-        }
-    });
-
-    // ================= RESPONSIBILITY =================
-    new Chart(document.getElementById('responsibilityChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Driver','Company','Third Party'],
-            datasets: [{
-                data: [
-                    responsibilityData.driver ?? 0,
-                    responsibilityData.company ?? 0,
-                    responsibilityData.third_party ?? 0
-                ]
-            }]
-        }
-    });
-
+new Chart(responsibilityChart, {
+    type: 'doughnut',
+    data: { labels: ['Driver','Company','Third Party'], datasets: [{ data: Object.values(responsibility) }] }
+});
 </script>
 @endsection
