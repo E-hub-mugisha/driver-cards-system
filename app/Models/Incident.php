@@ -27,7 +27,11 @@ class Incident extends Model
         'approved_by',
         'approved_at'
     ];
-
+    // App\Models\Incident.php
+    protected $casts = [
+        'incident_date' => 'datetime',
+        'approved_at' => 'datetime',
+    ];
 
     public function driver()
     {

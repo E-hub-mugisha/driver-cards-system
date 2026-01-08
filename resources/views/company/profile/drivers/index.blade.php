@@ -1,0 +1,362 @@
+@extends('layouts.app')
+@section('title', $company->name . " — Drivers")
+@section('content')
+
+<div class="container-fluid">
+    <div class="nk-content-inner">
+        <div class="nk-content-body">
+            <div class="nk-block-head nk-block-head-sm">
+                <div class="nk-block-between">
+                    <div class="nk-block-head-content">
+                        <h3 class="nk-block-title page-title">{{ $company->name }} — Drivers Management</h3>
+                    </div>
+                    <div class="nk-block-head-content">
+                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addDriverModal">
+                            Add Driver
+                        </button>
+                    </div>
+                </div>
+
+                @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> Please fix the following issues:
+                    <ul class="mt-2 mb-0">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+                <div class="nk-block nk-block-lg p-4 bg-white rounded-5">
+                    <div class="nk-block-head">
+                        <div class="nk-block-head-content">
+                            <div class="nk-block-des">
+                                <h5>Active & Inactive Drivers</h5>
+                                <table class="datatable-init nowrap nk-tb-list nk-tb-ulist">
+                                    <thead>
+                                        <tr class="nk-tb-item nk-tb-head">
+                                            <th class="nk-tb-col">#</th>
+                                            <th class="nk-tb-col">Photo</th>
+                                            <th class="nk-tb-col">Name</th>
+                                            <th class="nk-tb-col">ID</th>
+                                            <th class="nk-tb-col">License</th>
+                                            <th class="nk-tb-col">Phone</th>
+                                            <th class="nk-tb-col">Company</th>
+                                            <th class="nk-tb-col">Status</th>
+                                            <th class="nk-tb-col nk-tb-col-tools text-end"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($drivers as $driver)
+                                        @if(!$driver->trashed())
+                                        <tr class="nk-tb-item">
+                                            <td class="nk-tb-col">{{ $loop->iteration }}</td>
+                                            <td class="nk-tb-col">
+                                                @if($driver->photo)
+                                                <img src="{{ asset('storage/'.$driver->photo) }}" width="50">
+                                                @endif
+                                            </td>
+                                            <td class="nk-tb-col">{{ $driver->names }}</td>
+                                            <td class="nk-tb-col">{{ $driver->ID_number }}</td>
+                                            <td class="nk-tb-col">{{ $driver->driver_license }}</td>
+                                            <td class="nk-tb-col">{{ $driver->phone }}</td>
+                                            <td class="nk-tb-col">{{ $driver->company?->name ?? '-' }}</td>
+                                            <td class="nk-tb-col">{{ ucfirst($driver->status) }}</td>
+                                            <td class="nk-tb-col nk-tb-col-tools">
+                                                <ul class="nk-tb-actions gx-1">
+                                                    <li>
+                                                        <div class="drodown"><a href="#"
+                                                                class="dropdown-toggle btn btn-icon btn-trigger"
+                                                                data-bs-toggle="dropdown"><em
+                                                                    class="icon ni ni-more-h"></em></a>
+                                                            <div
+                                                                class="dropdown-menu dropdown-menu-end">
+                                                                <ul class="link-list-opt no-bdr">
+                                                                    <li>
+                                                                        <a href="{{ route('admin.drivers.show', $driver->id )}}" class="text-info">View Details</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a role="button" class="text-warning" data-bs-toggle="modal" data-bs-target="#editDriverModal{{ $driver->id }}">Edit</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a role="button" class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteDriverModal{{ $driver->id }}">Remove</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- Deleted Drivers --}}
+                <div class="nk-block nk-block-lg p-4 bg-white rounded-5 mt-5">
+                    <div class="nk-block-head">
+                        <div class="nk-block-head-content">
+                            <div class="nk-block-des">
+                                <h5>Deleted Drivers</h5>
+                                <table class="datatable-init nowrap nk-tb-list nk-tb-ulist">
+                                    <thead>
+                                        <tr class="nk-tb-item nk-tb-head">
+                                            <th class="nk-tb-col">#</th>
+                                            <th class="nk-tb-col">Photo</th>
+                                            <th class="nk-tb-col">Name</th>
+                                            <th class="nk-tb-col">ID</th>
+                                            <th class="nk-tb-col">License</th>
+                                            <th class="nk-tb-col">Phone</th>
+                                            <th class="nk-tb-col">Company</th>
+                                            <th class="nk-tb-col">Status</th>
+                                            <th class="nk-tb-col nk-tb-col-tools text-end"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($drivers->whereNotNull('deleted_at') as $driver)
+                                        <tr class="nk-tb-item">
+                                            <td class="nk-tb-col">{{ $loop->iteration }}</td>
+                                            <td class="nk-tb-col">
+                                                @if($driver->photo)
+                                                <img src="{{ asset('storage/'.$driver->photo) }}" width="50">
+                                                @endif
+                                            </td>
+                                            <td class="nk-tb-col">{{ $driver->names }}</td>
+                                            <td class="nk-tb-col">{{ $driver->ID_number }}</td>
+                                            <td class="nk-tb-col">{{ $driver->driver_license }}</td>
+                                            <td class="nk-tb-col">{{ $driver->phone }}</td>
+                                            <td class="nk-tb-col">{{ $driver->company?->name ?? '-' }}</td>
+                                            <td class="nk-tb-col">{{ ucfirst($driver->status) }}</td>
+                                            <td class="nk-tb-col nk-tb-col-tools">
+                                                <ul class="nk-tb-actions gx-1">
+                                                    <li>
+                                                        <div class="drodown"><a href="#"
+                                                                class="dropdown-toggle btn btn-icon btn-trigger"
+                                                                data-bs-toggle="dropdown"><em
+                                                                    class="icon ni ni-more-h"></em></a>
+                                                            <div
+                                                                class="dropdown-menu dropdown-menu-end">
+                                                                <ul class="link-list-opt no-bdr">
+                                                                    <li>
+                                                                        <a href="{{ route('admin.drivers.show', $driver->id )}}" class="text-info">View Details</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <form action="{{ route('admin.drivers.restore',$driver->id) }}" method="POST" class="d-inline">
+                                                                            @csrf
+                                                                            <button class="btn btn-success btn-sm">Restore</button>
+                                                                        </form>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Add Driver Modal --}}
+<div class="modal fade" id="addDriverModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('admin.company.drivers.store',$company->id) }}" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Driver</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>Name</label>
+                            <input type="text" name="names" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>ID Number</label>
+                            <input type="text" name="ID_number" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Driver License</label>
+                            <input type="text" name="driver_license" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Phone</label>
+                            <input type="text" name="phone" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>RSSB Number</label>
+                            <input type="text" name="rssb" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Insurance</label>
+                            <select name="insurance" class="form-select">
+                                <option selected disabled>-- select insurance --</option>
+                                <option>YES</option>
+                                <option>NO</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Contract Type</label>
+                            <select name="contract_type" class="form-select">
+                                <option selected disabled>-- select contract type --</option>
+                                <option value="3 month">3 Month</option>
+                                <option value="6 month">6 Month</option>
+                                <option value="12 month">12 Month</option>
+                                <option value="open ended">Open Ended</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Status</label>
+                            <select name="status" class="form-control">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Photo</label>
+                            <input type="file" name="photo" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Contract</label>
+                            <input type="file" name="contract" class="form-control">
+                        </div>
+                    </div> bg-white rounded-5
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Driver</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Edit and Delete Modals for each driver --}}
+@foreach($drivers as $driver)
+@if(!$driver->trashed())
+<!-- Edit Driver Modal -->
+<div class="modal fade" id="editDriverModal{{ $driver->id }}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('admin.company.drivers.update', [$company->id,$driver->id]) }}" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Driver</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>Name</label>
+                            <input type="text" name="names" class="form-control" value="{{ $driver->names }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>ID Number</label>
+                            <input type="text" name="ID_number" class="form-control" value="{{ $driver->ID_number }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Driver License</label>
+                            <input type="text" name="driver_license" class="form-control" value="{{ $driver->driver_license }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Phone</label>
+                            <input type="text" name="phone" class="form-control" value="{{ $driver->phone }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>RSSB Number</label>
+                            <input type="text" name="rssb" class="form-control" value="{{ $driver->rssb }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Insurance</label>
+                            <select name="insurance" class="form-select">
+                                <option>YES</option>
+                                <option>NO</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Contract Type</label>
+                            <select name="contract_type" class="form-select">
+                                <option value="3 month" {{ $driver->contract_type=='3 month'?'selected':'' }}>3 Month</option>
+                                <option value="6 month" {{ $driver->contract_type=='6 month'?'selected':'' }}>6 Month</option>
+                                <option value="12 month" {{ $driver->contract_type=='12 month'?'selected':'' }}>12 Month</option>
+                                <option value="open ended" {{ $driver->contract_type=='open ended'?'selected':'' }}>Open Ended</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Status</label>
+                            <select name="status" class="form-control">
+                                <option value="active" {{ $driver->status=='active'?'selected':'' }}>Active</option>
+                                <option value="inactive" {{ $driver->status=='inactive'?'selected':'' }}>Inactive</option>
+                                <option value="suspended" {{ $driver->status=='suspended'?'selected':'' }}>Suspended</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Photo</label>
+                            <input type="file" name="photo" class="form-control">
+                            @if($driver->photo)
+                            <small>Current: <a href="{{ asset('storage/'.$driver->photo) }}" target="_blank">View</a></small>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label>Contract</label>
+                            <input type="file" name="contract" class="form-control">
+                            @if($driver->contract)
+                            <small>Current: <a href="{{ asset('storage/'.$driver->contract) }}" target="_blank">View</a></small>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-success">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Driver Modal -->
+<div class="modal fade" id="deleteDriverModal{{ $driver->id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('admin.company.drivers.delete', [$company->id,$driver->id]) }}">
+                @csrf
+                @method('DELETE')
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">Confirm Remove</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to remove <b>{{ $driver->names }}</b>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+@endforeach
+
+@endsection

@@ -21,7 +21,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MembersController;
 use Illuminate\Support\Facades\Auth;
 
-
+use App\Http\Controllers\Company\CompanyDriverController;
+use App\Http\Controllers\Company\CompanyDriverIncidentController;
+use App\Http\Controllers\Company\CompanyDriverReportController;
+use App\Http\Controllers\Company\CompanyProfileController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -190,10 +193,142 @@ Route::prefix('admin/payroll')->name('admin.payroll.')->group(function () {
 
 /*------------------------------------------
 --------------------------------------------
-All Admin Routes List
+All Company (Staff) Routes
 --------------------------------------------
 --------------------------------------------*/
-Route::middleware(['auth', 'user-access:manager'])->group(function () {
+Route::middleware(['auth', 'user-access:manager'])
+    ->prefix('company')
+    ->name('company.')
+    ->group(function () {
 
-    Route::get('/manager/home', [HomeController::class, 'managerHome'])->name('manager.home');
-});
+        // Dashboard
+        Route::get('/dashboard', [CompanyDashboardController::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('profile', [CompanyProfileController::class, 'index'])->name('profile.index');
+        Route::put('profile', [CompanyProfileController::class, 'update'])->name('profile.update');
+
+        // Drivers (company-only)
+        Route::prefix('drivers')->name('drivers.')->group(function () {
+            Route::get('/', [CompanyDriverController::class, 'index'])
+                ->name('index');
+
+            Route::post('/', [CompanyDriverController::class, 'store'])
+                ->name('store');
+
+            Route::get('{driver}', [CompanyDriverController::class, 'show'])
+                ->name('show');
+
+            Route::put('{driver}', [CompanyDriverController::class, 'update'])
+                ->name('update');
+
+            Route::delete('{driver}', [CompanyDriverController::class, 'destroy'])
+                ->name('destroy');
+
+            Route::post('{driver}/restore', [CompanyDriverController::class, 'restore'])
+                ->name('restore');
+        });
+
+        // Staff Management (company-only)
+
+        Route::get('/staff', [CompanyProfileController::class, 'indexStaff'])
+            ->name('staff.index');
+
+        Route::post('/staff', [CompanyProfileController::class, 'storeStaff'])
+            ->name('staff.store');
+        Route::put('/staff/{staff}/update', [CompanyProfileController::class, 'updateStaff'])
+            ->name('staff.update');
+
+        Route::delete('/staff/{staff}', [CompanyProfileController::class, 'destroyStaff'])
+            ->name('staff.destroy');
+
+        Route::post('/staff/{staff}/reset-password', [CompanyProfileController::class, 'resetPasswordStaff'])
+            ->name('staff.reset-password');
+
+        // Driver Behaviors (company view)
+        Route::get('/drivers/{driver}/behaviors', [CompanyDriverController::class, 'indexBehavior'])
+            ->name('drivers.behaviors.index');
+
+        Route::post('/{driver}/behaviors', [CompanyDriverController::class, 'storeBehavior'])->name('drivers.behaviors.store');
+
+        // View single driver behavior list
+        Route::get('driver/{driver}/behaviors', [CompanyDriverReportController::class, 'driverBehaviors'])
+            ->name('driver.behaviors');
+
+        // Download single driver report
+        Route::get('driver/{driver}/behaviors/download', [CompanyDriverReportController::class, 'downloadDriverBehaviors'])
+            ->name('driver.behaviors.download');
+
+        // Send single driver report by email
+        Route::post('driver/{driver}/behaviors/send-email', [CompanyDriverReportController::class, 'sendDriverBehaviorReport'])
+            ->name('driver.behaviors.sendEmail');
+
+        Route::post('{driver}/incidents', [CompanyDriverIncidentController::class, 'store'])
+            ->name('incidents.store');
+
+        Route::post('incidents/{incident}/approve', [CompanyDriverIncidentController::class, 'approve'])
+            ->name('incidents.approve');
+
+        Route::post('incidents/{incident}/reject', [CompanyDriverIncidentController::class, 'reject'])
+            ->name('incidents.reject');
+
+        Route::get('/drivers/{driver}/incidents', [CompanyDriverController::class, 'indexIncident'])
+            ->name('drivers.incidents.index');
+
+        // Reports (company scoped)
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/drivers', [CompanyDriverReportController::class, 'driverReports'])
+                ->name('drivers');
+
+            Route::get('/behaviors', [CompanyDriverReportController::class, 'behaviorReports'])
+                ->name('behaviors');
+
+            Route::get('/incidents', [CompanyDriverReportController::class, 'incidentReports'])
+                ->name('incidents');
+
+            Route::get('/', [CompanyDashboardController::class, 'reportCompany'])
+                ->name('index');
+
+            Route::get('/export/pdf/{type}', [CompanyDriverReportController::class, 'exportPdf'])
+                ->name('export.pdf');
+            Route::get('/export/excel/{type}', [CompanyDriverReportController::class, 'exportExcel'])
+                ->name('export.excel');
+        });
+
+        // Payroll (company view only)
+        Route::prefix('payroll')->name('payroll.')->group(function () {
+            Route::get('/', [CompanyDashboardController::class, 'payrollCompany'])
+                ->name('index');
+
+            Route::post('settings', [CompanyDashboardController::class, 'storePayroll'])
+                ->name('settings.store');
+
+            // Update existing payroll setting
+            Route::put('settings/{payrollSetting}', [CompanyDashboardController::class, 'updatePayroll'])
+                ->name('settings.update');
+
+            Route::post(
+                '/generate',
+                [CompanyDashboardController::class, 'generate']
+            )->name('generate');
+
+            Route::get('preview', [CompanyDashboardController::class, 'previewPayroll'])
+                ->name('preview');
+
+            Route::post('process', [CompanyDashboardController::class, 'processPayroll'])->name('process');
+            Route::get('review', [CompanyDashboardController::class, 'reviewPayroll'])->name('review');
+
+            Route::post('{payroll}/approve', [CompanyDashboardController::class, 'approvePayroll'])->name('approve');
+            Route::get('driver/{detail}/download', [CompanyDashboardController::class, 'downloadDriverPayslip'])->name('download.driver');
+
+            Route::post('/send-otp/{payroll}', [CompanyDashboardController::class, 'sendOtp'])->name('sendOtp');
+            Route::post('/delete/{payroll}', [CompanyDashboardController::class, 'deletePayroll'])->name('delete');
+        });
+
+        // Notifications
+        Route::get('/notifications', [DashboardController::class, 'notification'])
+            ->name('notifications.index');
+
+        Route::get('/notifications/mark-all', [DashboardController::class, 'markAllRead'])
+            ->name('notifications.markAllRead');
+    });
