@@ -25,9 +25,24 @@ use App\Http\Controllers\Company\CompanyDriverController;
 use App\Http\Controllers\Company\CompanyDriverIncidentController;
 use App\Http\Controllers\Company\CompanyDriverReportController;
 use App\Http\Controllers\Company\CompanyProfileController;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/run-migrations', function () {
+
+    Artisan::call('migrate:fresh', [
+        '--seed' => true,
+        '--force' => true,
+    ]);
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Migrations and seeders executed successfully.',
+        'output' => Artisan::output(),
+    ]);
 });
 
 Route::middleware('guest')->group(function () {
