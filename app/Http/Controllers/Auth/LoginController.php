@@ -59,7 +59,7 @@ class LoginController extends Controller
                 alert()->success('success!','Login successfully.');
                 return redirect()->route('admin.home');
             }else if (auth()->user()->type == 'manager') {
-                return redirect()->route('manager.home');
+                return redirect()->route('company.dashboard');
             }else{
                 alert()->success('success!','Login successfully.');
                 return redirect()->route('driver.index');

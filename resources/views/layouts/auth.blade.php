@@ -52,7 +52,7 @@
                                     </ul>
                                 </div>
                                 <div class="mt-3">
-                                    <p>&copy; 2025 {{ config('app.name')}}. All Rights Reserved.</p>
+                                    <p>&copy; {{ now()->year }} {{ config('app.name')}}. All Rights Reserved.</p>
                                 </div>
                             </div>
                         </div>

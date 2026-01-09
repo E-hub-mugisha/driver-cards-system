@@ -27,7 +27,7 @@ use App\Http\Controllers\Company\CompanyDriverReportController;
 use App\Http\Controllers\Company\CompanyProfileController;
 
 Route::get('/', function () {
-    return view('auth.login');
+    return view('welcome');
 });
 
 Route::middleware('guest')->group(function () {
