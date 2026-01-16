@@ -3,34 +3,184 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password</title>
+    <title>Reset Password | {{ config('app.name') }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    {{-- Icons --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+            font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .glass-wrapper {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, .25);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, .4);
+            overflow: hidden;
+        }
+
+        .glass-left {
+            background: linear-gradient(135deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, .05));
+            padding: 3rem;
+            color: #fff;
+        }
+
+        .glass-right {
+            padding: 3rem;
+            background: rgba(255, 255, 255, .05);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, .15);
+            border: none;
+            color: #fff;
+        }
+
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, .7);
+        }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, .25);
+            box-shadow: none;
+            color: #fff;
+        }
+
+        label {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .btn-glass {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            border: none;
+            color: #fff;
+        }
+
+        .btn-glass:hover {
+            opacity: .9;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, .25);
+        }
+    </style>
 </head>
 
-<body class="d-flex justify-content-center align-items-center vh-100 bg-dark bg-opacity-50">
-    <div class="auth-card">
-        <h2 class="text-center text-white fw-bold mb-4">Create New Password</h2>
-        <form action="{{ route('password.store') }}" method="POST">
-            @csrf
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+<body>
+    <div class="container d-flex align-items-center justify-content-center min-vh-100">
+        <div class="col-lg-10">
+
+            <div class="glass-wrapper row g-0">
+                <div class="col-md-6 glass-left d-none d-md-flex flex-column justify-content-center">
+                    <img src="{{ asset('assets/images/atpr_logo.png') }}" style="max-width: 120px" class="mb-4">
+
+                    <h2 class="fw-bold">Welcome!</h2>
+                    <p class="text-white-50 mt-2">
+                        Create an account to access {{ config('app.name') }} dashboard securely.
+                    </p>
+
+                    <div class="divider my-4"></div>
+
+                    <small class="text-white-50">
+                        © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+                    </small>
+                </div>
+                {{-- Right Panel --}}
+                <div class="col-md-6 glass-right">
+                    <h4 class="fw-bold text-white mb-3">Create New Password</h4>
+
+                    @if ($errors->any())
+                    <div class="alert alert-danger small">
+                        Please fix the errors below.
+                    </div>
+                    @endif
+                    <form action="{{ route('password.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="token" value="{{ $token }}">
 
 
-            <div class="mb-3">
-                <label class="form-label text-white">Email</label>
-                <input type="email" name="email" class="form-control" required>
+                        <div class="mb-3">
+                            <label class="form-label text-white">Email</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>New Password</label>
+                            <div class="input-group">
+                                <input type="password"
+                                    name="password"
+                                    id="password"
+                                    class="form-control form-control-lg glass-input"
+                                    placeholder="Create a password"
+                                    required>
+                                <button class="btn btn-light" type="button" onclick="togglePassword()">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            @error('password')
+                            <small class="text-warning">{{ $message }}</small>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white">Confirm Password</label>
+                            <div class="input-group">
+                                <input type="password" id="password" name="password_confirmation" class="form-control" required>
+                                <button class="btn btn-light" type="button" onclick="togglePassword()">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn btn-glass w-100 py-3 rounded-pill" id="registerBtn">
+                            <span class="btn-text">Reset Password</span>
+                            <span class="spinner-border spinner-border-sm d-none" id="spinner"></span>
+                        </button>
+                    </form>
+                </div>
+
             </div>
-            <div class="mb-3">
-                <label class="form-label text-white">New Password</label>
-                <input type="password" name="password" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label text-white">Confirm Password</label>
-                <input type="password" name="password_confirmation" class="form-control" required>
-            </div>
-            <button class="btn btn-light w-100 fw-bold">Reset Password</button>
-        </form>
+        </div>
     </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function() {
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.querySelector('.btn-text').classList.add('d-none');
+            document.getElementById('spinner').classList.remove('d-none');
+        });
+    </script>
+
 </body>
 
 </html>

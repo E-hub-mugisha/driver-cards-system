@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\PayrollProcessingController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Company\CompanyDashboardController;
 use App\Http\Controllers\DriverController;
@@ -167,6 +168,18 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::get('/notifications', [DashboardController::class, 'notification'])->name('notifications.index');
     Route::get('/notifications/mark-all', [DashboardController::class, 'markAllRead'])->name('notifications.markAllRead');
+
+    // View single driver behavior list
+    Route::get('driver/{driver}/behaviors', [AdminBehaviorController::class, 'driverBehaviors'])
+        ->name('admin.driver.behaviors');
+
+    // Download single driver report
+    Route::get('driver/{driver}/behaviors/download', [AdminBehaviorController::class, 'downloadDriverBehaviors'])
+        ->name('admin.driver.behaviors.download');
+
+    // Send single driver report by email
+    Route::post('driver/{driver}/behaviors/send-email', [AdminBehaviorController::class, 'sendDriverBehaviorReport'])
+        ->name('admin.driver.behaviors.sendEmail');
 });
 
 Route::middleware(['auth', 'user-access:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -347,3 +360,19 @@ Route::middleware(['auth', 'user-access:manager'])
         Route::get('/notifications/mark-all', [DashboardController::class, 'markAllRead'])
             ->name('notifications.markAllRead');
     });
+
+// Show form to request password reset
+Route::get('password/reset', [PasswordResetController::class, 'request'])
+    ->name('password.request');
+
+// Handle sending reset email
+Route::post('password/email', [PasswordResetController::class, 'email'])
+    ->name('password.email');
+
+// Show form to reset password (via token)
+Route::get('password/reset/{token}', [PasswordResetController::class, 'reset'])
+    ->name('password.reset');
+
+// Handle password update
+Route::post('password/reset', [PasswordResetController::class, 'update'])
+    ->name('password.update');

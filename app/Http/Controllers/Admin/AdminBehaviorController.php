@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\DriverBehaviorReportMail;
 use App\Models\BehaviorCategory;
 use App\Models\BehaviorType;
 use App\Models\Company;
 use App\Models\Driver;
 use App\Models\DriverBehavior;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class AdminBehaviorController extends Controller
 {
@@ -132,5 +135,55 @@ class AdminBehaviorController extends Controller
             ->get();
 
         return response()->json($drivers);
+    }
+
+    // Show single driver behavior list
+    public function driverBehaviors(\App\Models\Driver $driver)
+    {
+        $driver->load(['behaviors.behaviorType.behaviorCategory', 'behaviors.reporter']);
+        return view('admin.drivers.behaviors', compact('driver'));
+    }
+
+    // Download single driver report
+    public function downloadDriverBehaviors(\App\Models\Driver $driver)
+    {
+        $driver->load([
+            'company',
+            'behaviors.behaviorType.behaviorCategory',
+            'behaviors.reporter'
+        ]);
+
+        // Scope company directly from driver
+        $company = $driver->company;
+
+        $pdf = Pdf::loadView('admin.drivers.behaviors_pdf', compact('driver', 'company'));
+
+        return $pdf->download("DriverBehaviorReport-{$driver->names}.pdf");
+    }
+
+    public function sendDriverBehaviorReport(Request $request, \App\Models\Driver $driver)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $driver->load([
+            'company',
+            'behaviors.behaviorType.behaviorCategory',
+            'behaviors.reporter'
+        ]);
+
+        // Prefer driver company, fallback to logged-in user's company
+        $company = $driver->company ?? auth()->user()->staff->company;
+
+        $pdf = Pdf::loadView('admin.drivers.behaviors_pdf', compact('driver', 'company'));
+
+        Mail::to($request->email)
+            ->send(new DriverBehaviorReportMail($driver, $pdf));
+
+        return back()->with(
+            'success',
+            'Report sent successfully to ' . $request->email
+        );
     }
 }

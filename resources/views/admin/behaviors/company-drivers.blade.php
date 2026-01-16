@@ -38,91 +38,36 @@
 
                 <h5 class="mb-3">Company: {{ $selectedCompany->name }}</h5>
 
-                <table class="table table-bordered mt-2">
+                <table class="datatable-init nowrap nk-tb-list nk-tb-ulist">
                     <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Driver</th>
-                            <th>Behaviors Reported</th>
-                            <th>Action</th>
+                        <tr class="nk-tb-item nk-tb-head">
+                            <th class="nk-tb-col">#</th>
+                            <th class="nk-tb-col">Driver</th>
+                            <th class="nk-tb-col">Behaviors Reported</th>
+                            <th class="nk-tb-col">Action</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         @forelse($drivers as $index => $driver)
-
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $driver->names }}</td>
-
-                                <td>
-                                    <span class="badge bg-danger">
-                                        {{ $driver->behaviors_count }} Reports
-                                    </span>
-                                </td>
-
-                                <td>
-                                    @if($driver->behaviors_count > 0)
-                                        <button class="btn btn-sm btn-info"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#behaviorModal{{ $driver->id }}">
-                                            View Details
-                                        </button>
-                                    @else
-                                        <span class="text-muted">No Records</span>
-                                    @endif
-                                </td>
-                            </tr>
-
-
-                            <!-- ================= BEHAVIOR MODAL ================= -->
-                            <div class="modal fade" id="behaviorModal{{ $driver->id }}" tabindex="-1">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">
-                                                Behavior Records - {{ $driver->names }}
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-
-                                        <div class="modal-body">
-
-                                            @foreach($driver->behaviors as $behavior)
-                                                <div class="border rounded p-2 mb-2">
-                                                    <strong>Title:</strong> {{ $behavior->behaviorType->behaviorCategory->name ?? 'N/A' }} <br>
-                                                    <strong>Type:</strong> {{ $behavior->behaviorType->name ?? 'N/A' }} <br>
-                                                    <strong>Description:</strong>
-                                                    {{ $behavior->description ?? 'No description' }} <br>
-                                                    <strong>Reported by:</strong>{{ optional($behavior->reporter)->name ?? 'System' }}<br>
-                                                    <small class="text-muted">
-                                                        {{ $behavior->created_at?->format('d M Y - h:i A') }}
-                                                    </small>
-                                                </div>
-                                            @endforeach
-
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <button class="btn btn-secondary" data-bs-dismiss="modal">
-                                                Close
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- ================================================== -->
-
+                        <tr class="nk-tb-item">
+                            <td class="nk-tb-col">{{ $index + 1 }}</td>
+                            <td class="nk-tb-col">{{ $driver->names }}</td>
+                            <td class="nk-tb-col"><span class="badge bg-danger">Reported {{ $driver->behaviors_count }}</span></td>
+                            <td class="nk-tb-col">
+                                @if($driver->behaviors_count > 0)
+                                <a href="{{ route('admin.driver.behaviors', $driver->id) }}" class="btn btn-sm btn-info">
+                                    View Details
+                                </a>
+                                @else
+                                <span class="text-muted">No Records</span>
+                                @endif
+                            </td>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="4" class="text-center">
-                                    No drivers found for this company.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="4" class="text-center">No drivers found.</td>
+                        </tr>
                         @endforelse
-
                     </tbody>
                 </table>
 

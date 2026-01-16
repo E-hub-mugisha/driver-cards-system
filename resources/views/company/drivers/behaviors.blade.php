@@ -78,31 +78,31 @@
 
 </div>
 
-<div class="card">
-    <div class="card-header">
+<div class="card p-4">
+    <div class="card-title">
         Total Records: {{ $driver->behaviors->count() }}
     </div>
 
-    <table class="table  mb-0">
+    <table class="datatable-init nowrap nk-tb-list nk-tb-ulist">
         <thead>
-            <tr>
-                <th>#</th>
-                <th>Behavior Type</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Reported By</th>
-                <th>Date</th>
+            <tr class="nk-tb-item nk-tb-head">
+                <th class="nk-tb-col">#</th>
+                <th class="nk-tb-col">Behavior Type</th>
+                <th class="nk-tb-col">Category</th>
+                <th class="nk-tb-col">Description</th>
+                <th class="nk-tb-col">Reported By</th>
+                <th class="nk-tb-col">Date</th>
             </tr>
         </thead>
         <tbody>
             @forelse($driver->behaviors as $index => $behavior)
-            <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $behavior->behaviorType->name ?? 'N/A' }}</td>
-                <td>{{ $behavior->behaviorType->behaviorCategory->name ?? 'N/A' }}</td>
-                <td>{{ $behavior->description ?? 'N/A' }}</td>
-                <td>{{ optional($behavior->reporter)->name ?? 'System' }}</td>
-                <td>{{ $behavior->created_at?->format('d M Y - h:i A') }}</td>
+            <tr class="nk-tb-item">
+                <td class="nk-tb-col">{{ $index + 1 }}</td>
+                <td class="nk-tb-col">{{ $behavior->behaviorType->name ?? 'N/A' }}</td>
+                <td class="nk-tb-col">{{ $behavior->behaviorType->behaviorCategory->name ?? 'N/A' }}</td>
+                <td class="nk-tb-col">{{ $behavior->description ?? 'N/A' }}</td>
+                <td class="nk-tb-col">{{ optional($behavior->reporter)->name ?? 'System' }}</td>
+                <td class="nk-tb-col">{{ $behavior->created_at?->format('d M Y - h:i A') }}</td>
             </tr>
             @empty
             <tr>
