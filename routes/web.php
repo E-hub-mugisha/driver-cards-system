@@ -29,7 +29,7 @@ use App\Http\Controllers\Company\CompanyProfileController;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/run-migrations', function () {

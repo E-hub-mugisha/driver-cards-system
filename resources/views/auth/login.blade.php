@@ -2,180 +2,418 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login | {{ config('app.name') }}</title>
+    <title>Sign In | {{ config('app.name') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    {{-- Icons --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --blue: #00ADEE;
+            --blue-dark: #0090c8;
+            --blue-light: #e6f7fd;
+            --amber: #E3B228;
+            --amber-dark: #c99b1e;
+            --amber-light: #fdf6e3;
+            --text: #1a2235;
+            --text-muted: #6b7a99;
+            --border: #e4e9f2;
+            --white: #ffffff;
+            --surface: #f7f9fc;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--surface);
             min-height: 100vh;
-            background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
-            background-size: 400% 400%;
-            animation: gradientMove 12s ease infinite;
-            font-family: 'Inter', sans-serif;
-        }
-
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .glass-wrapper {
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border-radius: 22px;
-            border: 1px solid rgba(255,255,255,.25);
-            box-shadow: 0 25px 60px rgba(0,0,0,.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
             overflow: hidden;
         }
 
-        .glass-left {
-            background: linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05));
-            padding: 3rem;
+        /* Decorative background shapes */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -120px; right: -120px;
+            width: 480px; height: 480px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,173,238,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px; left: -100px;
+            width: 400px; height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(227,178,40,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 1000px;
+            padding: 1.5rem;
+            z-index: 1;
+        }
+
+        .auth-card {
+            background: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 8px 40px rgba(26,34,53,0.10), 0 1.5px 6px rgba(0,173,238,0.06);
+            display: flex;
+            overflow: hidden;
+            min-height: 560px;
+        }
+
+        /* Left brand panel */
+        .brand-panel {
+            width: 42%;
+            background: linear-gradient(145deg, #00ADEE 0%, #0072b8 100%);
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 240px; height: 240px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+        }
+        .brand-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -40px; left: -40px;
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            background: rgba(227,178,40,0.15);
+        }
+
+        .brand-logo {
+            max-width: 100px;
+            display: block;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 100px;
+            padding: 0.35rem 0.85rem;
+            font-size: 0.75rem;
             color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            width: fit-content;
+            margin-bottom: 1.5rem;
         }
 
-        .glass-right {
-            padding: 3rem;
-            background: rgba(255,255,255,.05);
-        }
+        .brand-badge i { color: var(--amber); font-size: 0.85rem; }
 
-        .glass-input {
-            background: rgba(255,255,255,.15);
-            border: none;
+        .brand-title {
+            font-size: 2rem;
+            font-weight: 800;
             color: #fff;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
         }
 
-        .glass-input::placeholder {
-            color: rgba(255,255,255,.7);
+        .brand-sub {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.72);
+            line-height: 1.6;
         }
 
-        .glass-input:focus {
-            background: rgba(255,255,255,.25);
-            box-shadow: none;
-            color: #fff;
-        }
-
-        label {
-            color: #fff;
-            font-weight: 500;
-        }
-
-        .btn-glass {
-            background: linear-gradient(135deg, #00c6ff, #0072ff);
-            border: none;
-            color: #fff;
-        }
-
-        .btn-glass:hover {
-            opacity: .9;
-        }
-
-        .divider {
+        .brand-divider {
             height: 1px;
-            background: rgba(255,255,255,.25);
+            background: rgba(255,255,255,0.2);
+            margin: 1.5rem 0;
+        }
+
+        .brand-footer {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .brand-features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .brand-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-size: 0.83rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .brand-feature .icon-wrap {
+            width: 28px; height: 28px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem;
+            color: var(--amber);
+            flex-shrink: 0;
+        }
+
+        /* Right form panel */
+        .form-panel {
+            flex: 1;
+            padding: 3rem 2.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-title {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 0.35rem;
+        }
+
+        .form-sub {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .form-sub a {
+            color: var(--blue);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .form-sub a:hover { text-decoration: underline; }
+
+        .form-label {
+            font-size: 0.83rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .form-control {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.92rem;
+            padding: 0.7rem 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control:focus {
+            background: var(--white);
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(0,173,238,0.12);
+            color: var(--text);
+            outline: none;
+        }
+
+        .form-control::placeholder { color: #b0b9cc; }
+
+        .input-group .form-control { border-right: none; border-radius: 12px 0 0 12px; }
+
+        .input-group .btn-eye {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            color: var(--text-muted);
+            padding: 0 1rem;
+            transition: color 0.2s;
+        }
+        .input-group .btn-eye:hover { color: var(--blue); }
+        .input-group:focus-within .btn-eye {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(0,173,238,0.12);
+            box-shadow: inset 0 0 0 0 transparent, 3px 0 0 rgba(0,173,238,0.12);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--blue);
+            border-color: var(--blue);
+        }
+
+        .form-check-label {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+        }
+
+        .link-forgot {
+            font-size: 0.83rem;
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .link-forgot:hover { text-decoration: underline; }
+
+        .btn-primary-main {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 0.8rem 1.5rem;
+            width: 100%;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            box-shadow: 0 4px 18px rgba(0,173,238,0.25);
+        }
+        .btn-primary-main:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,173,238,0.32); }
+        .btn-primary-main:active { transform: translateY(0); }
+        .btn-primary-main:disabled { opacity: 0.7; transform: none; }
+
+        .divider-or {
+            display: flex; align-items: center; gap: 1rem;
+            margin: 1.5rem 0 0;
+        }
+        .divider-or span { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
+        .divider-or::before, .divider-or::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+
+        .alert-error {
+            background: #fff5f5;
+            border: 1.5px solid #ffc9c9;
+            border-radius: 10px;
+            color: #c0392b;
+            font-size: 0.83rem;
+            padding: 0.65rem 1rem;
+            margin-bottom: 1.25rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        .text-warning-field { font-size: 0.78rem; color: #c0392b; margin-top: 0.3rem; display: block; }
+
+        @media (max-width: 767px) {
+            .brand-panel { display: none; }
+            .form-panel { padding: 2.5rem 1.75rem; }
         }
     </style>
 </head>
 <body>
+<div class="auth-container">
+    <div class="auth-card">
 
-<div class="container d-flex align-items-center justify-content-center min-vh-100">
-    <div class="col-lg-8">
-
-        <div class="glass-wrapper row g-0">
-
-            {{-- Left Panel --}}
-            <div class="col-md-6 glass-left d-none d-md-flex flex-column justify-content-center">
-                <img src="{{ asset('assets/images/atpr_logo.png') }}" style="max-width: 120px" class="mb-4">
-
-                <h2 class="fw-bold">Welcome Back</h2>
-                <p class="text-white-50 mt-2">
-                    Secure access to {{ config('app.name') }} dashboard.
-                </p>
-
-                <div class="divider my-4"></div>
-
-                <small class="text-white-50">
-                    © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
-                </small>
+        {{-- Brand Panel --}}
+        <div class="brand-panel d-none d-md-flex flex-column">
+            <div>
+                <img src="{{ asset('assets/images/atpr_logo.png') }}" class="brand-logo mb-4" alt="Logo">
+                <div class="brand-badge"><i class="bi bi-shield-check-fill"></i> Secure Access</div>
+                <h2 class="brand-title">Welcome Back</h2>
+                <p class="brand-sub">Sign in to your account and manage the ATPR dashboard securely.</p>
+                <div class="brand-features">
+                    <div class="brand-feature"><span class="icon-wrap"><i class="bi bi-graph-up-arrow"></i></span> Real-time analytics & reports</div>
+                    <div class="brand-feature"><span class="icon-wrap"><i class="bi bi-people-fill"></i></span> Member management tools</div>
+                    <div class="brand-feature"><span class="icon-wrap"><i class="bi bi-lock-fill"></i></span> End-to-end data security</div>
+                </div>
             </div>
-
-            {{-- Right Panel --}}
-            <div class="col-md-6 glass-right">
-                <h4 class="fw-bold text-white mb-3">Sign In</h4>
-
-                @if ($errors->any())
-                    <div class="alert alert-danger small">
-                        Incorrect email or password.
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('login') }}" id="loginForm">
-                    @csrf
-
-                    <div class="mb-3">
-                        <label>Email / Username</label>
-                        <input type="text"
-                               name="email"
-                               value="{{ old('email') }}"
-                               class="form-control form-control-lg glass-input">
-                        @error('email')
-                        <small class="text-warning">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Password</label>
-                        <div class="input-group">
-                            <input type="password"
-                                   name="password"
-                                   id="password"
-                                   class="form-control form-control-lg glass-input">
-                            <button class="btn btn-light" type="button" onclick="togglePassword()">
-                                <i class="bi bi-eye"></i>
-                            </button>
-                        </div>
-                        @error('password')
-                        <small class="text-warning">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <a href="{{ route('password.request') }}" class="text-white-50 small">
-                            Forgot password?
-                        </a>
-                    </div>
-
-                    <button type="submit" class="btn btn-glass w-100 py-3 rounded-pill" id="loginBtn">
-                        <span class="btn-text">Sign In</span>
-                        <span class="spinner-border spinner-border-sm d-none" id="spinner"></span>
-                    </button>
-                </form>
+            <div>
+                <div class="brand-divider"></div>
+                <p class="brand-footer">© {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
             </div>
-
         </div>
+
+        {{-- Form Panel --}}
+        <div class="form-panel">
+            <p class="form-eyebrow">Dashboard Portal</p>
+            <h1 class="form-title">Sign In</h1>
+            <p class="form-sub">Don't have an account? <a href="{{ route('register') }}">Create one</a></p>
+
+            @if ($errors->any())
+            <div class="alert-error"><i class="bi bi-exclamation-circle-fill"></i> Incorrect email or password. Please try again.</div>
+            @endif
+
+            <form method="POST" action="{{ route('login') }}" id="loginForm">
+                @csrf
+
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" value="{{ old('email') }}"
+                        class="form-control" placeholder="you@example.com" required autofocus>
+                    @error('email')<span class="text-warning-field">{{ $message }}</span>@enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <div class="input-group">
+                        <input type="password" name="password" id="password"
+                            class="form-control" placeholder="Enter your password" required>
+                        <button class="btn-eye" type="button" onclick="togglePassword('password', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    @error('password')<span class="text-warning-field">{{ $message }}</span>@enderror
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                        <label class="form-check-label" for="remember">Remember me</label>
+                    </div>
+                    <a href="{{ route('password.request') }}" class="link-forgot">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-primary-main" id="loginBtn">
+                    <span class="btn-text">Sign In</span>
+                    <span class="spinner-border spinner-border-sm d-none" id="spinner"></span>
+                </button>
+            </form>
+        </div>
+
     </div>
 </div>
 
 <script>
-    function togglePassword() {
-        const input = document.getElementById('password');
-        input.type = input.type === 'password' ? 'text' : 'password';
+function togglePassword(id, btn) {
+    const input = document.getElementById(id);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'bi bi-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'bi bi-eye';
     }
-
-    document.getElementById('loginForm').addEventListener('submit', function () {
-        const btn = document.getElementById('loginBtn');
-        btn.disabled = true;
-        btn.querySelector('.btn-text').classList.add('d-none');
-        document.getElementById('spinner').classList.remove('d-none');
-    });
+}
+document.getElementById('loginForm').addEventListener('submit', function() {
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true;
+    btn.querySelector('.btn-text').classList.add('d-none');
+    document.getElementById('spinner').classList.remove('d-none');
+});
 </script>
-
 </body>
 </html>
